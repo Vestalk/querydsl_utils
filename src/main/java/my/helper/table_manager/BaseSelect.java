@@ -13,53 +13,50 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class BaseSelect<T> {
+public class BaseSelect<E> extends AbstractSelect<BaseSelect<E>, E>{
 
-    private final JPAQuery<T> jpaQuery;
-    private final EntityPathBase<T> entityPath;
+//    private final EntityPathBase<E> entityPath;
 
-    protected BaseSelect(JPAQuery<T> jpaQuery, EntityPathBase<T> entityPath) {
-        this.jpaQuery = jpaQuery;
-        this.entityPath = entityPath;
+    protected BaseSelect(JPAQuery<E> jpaQuery, EntityPathBase<E> entityPath) {
+        super(jpaQuery, entityPath);
     }
 
     public static <T> BaseSelect<T> build (JPAQueryFactory queryFactory, EntityPathBase<T> entityPath) {
         return new BaseSelect<T>(queryFactory.select(entityPath).from(entityPath), entityPath);
     }
 
-    public BaseSelect<T> where (List<Predicate> predicates) {
-        this.jpaQuery.where(predicates.toArray(Predicate[]::new));
-        return this;
-    }
+//    public BaseSelect<E> where (List<Predicate> predicates) {
+//        this.jpaQuery.where(predicates.toArray(Predicate[]::new));
+//        return this;
+//    }
+//
+//    public BaseSelect<E> orderByFields (List<OrderBy> orders) {
+//        PathBuilder<E> pb = new PathBuilder<>(entityPath.getType(), entityPath.getMetadata().getName());
+//        List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+//        for (OrderBy order: orders) {
+//            StringPath path = pb.getString(order.getField());
+//            OrderSpecifier<?> orderSpecifier =
+//                    Order.ASC.equals(order.getOrder())
+//                            ? path.asc()
+//                            : path.desc();
+//            orderSpecifiers.add(orderSpecifier);
+//        }
+//        return orderBySpecifier(orderSpecifiers);
+//    }
 
-    public BaseSelect<T> orderByFields (List<OrderBy> orders) {
-        PathBuilder<T> pb = new PathBuilder<>(entityPath.getType(), entityPath.getMetadata().getName());
-        List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
-        for (OrderBy order: orders) {
-            StringPath path = pb.getString(order.getField());
-            OrderSpecifier<?> orderSpecifier =
-                    Order.ASC.equals(order.getOrder())
-                            ? path.asc()
-                            : path.desc();
-            orderSpecifiers.add(orderSpecifier);
-        }
-        return orderBySpecifier(orderSpecifiers);
-    }
+//    public BaseSelect<E> orderBySpecifier (List<OrderSpecifier<?>> orderSpecifiers) {
+//        this.jpaQuery.orderBy(orderSpecifiers.toArray(OrderSpecifier[]::new));
+//        return this;
+//    }
 
-    public BaseSelect<T> orderBySpecifier (List<OrderSpecifier<?>> orderSpecifiers) {
-        this.jpaQuery.orderBy(orderSpecifiers.toArray(OrderSpecifier[]::new));
-        return this;
-    }
-
-    public List<T> fetch () {
-        return this.jpaQuery.fetch();
-    }
-
-    public Page<T> page (Pageable pageable) {
-        Long total = this.jpaQuery.clone().select(entityPath.count()).fetchOne();
-        List<T> content = this.jpaQuery.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
-        return new PageImpl<>(content, pageable, total);
-    }
+//    public List<E> fetch () {
+//        return this.jpaQuery.fetch();
+//    }
+//
+//    public Page<E> page (Pageable pageable) {
+//        Long total = this.jpaQuery.clone().select(entityPath.count()).fetchOne();
+//        List<E> content = this.jpaQuery.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
+//        return new PageImpl<>(content, pageable, total);
+//    }
 }
