@@ -16,20 +16,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public abstract class AbstractSelect<T extends AbstractSelect<T, E>, E> {
+public abstract class AbstractSelect<T extends AbstractSelect<T, E, D>, E, D> {
 
-    protected final JPAQuery<E> jpaQuery;
+    protected final JPAQuery<D> jpaQuery;
     protected final EntityPathBase<E> entityPath;
 
-    public T where (List<Predicate> predicates) {
+    public T where(List<Predicate> predicates) {
         jpaQuery.where(predicates.toArray(Predicate[]::new));
         return (T) this;
     }
 
-    public T orderByFields (List<OrderBy> orders) {
+    public T orderByFields(List<OrderBy> orders) {
         PathBuilder<E> pb = new PathBuilder<>(entityPath.getType(), entityPath.getMetadata().getName());
         List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
-        for (OrderBy order: orders) {
+        for (OrderBy order : orders) {
             StringPath path = pb.getString(order.getField());
             OrderSpecifier<?> orderSpecifier =
                     Order.ASC.equals(order.getOrder())
@@ -40,18 +40,18 @@ public abstract class AbstractSelect<T extends AbstractSelect<T, E>, E> {
         return orderBySpecifier(orderSpecifiers);
     }
 
-    public T orderBySpecifier (List<OrderSpecifier<?>> orderSpecifiers) {
+    public T orderBySpecifier(List<OrderSpecifier<?>> orderSpecifiers) {
         jpaQuery.orderBy(orderSpecifiers.toArray(OrderSpecifier[]::new));
         return (T) this;
     }
 
-    public List<E> fetch () {
+    public List<D> fetch() {
         return this.jpaQuery.fetch();
     }
 
-    public Page<E> page (Pageable pageable) {
+    public Page<D> page(Pageable pageable) {
         Long total = this.jpaQuery.clone().select(entityPath.count()).fetchOne();
-        List<E> content = this.jpaQuery.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
+        List<D> content = this.jpaQuery.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         return new PageImpl<>(content, pageable, total);
     }
 

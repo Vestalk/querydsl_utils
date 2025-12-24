@@ -40,13 +40,13 @@ public class Test {
 //        JPAQuery<TEDto> aaa = queryFactory.select(new QTEDto(te.name)).from(te);
 //        List<TEDto> a2 = aaa.fetch();
 
-//        ProjectionSelect<TestEntity, TEDto, QTEDto> dtoProjectionSelect =
-//                ProjectionSelect
-//                        .build(queryFactory, te, new QTEDto(te.name))
-//                        .where(List.of(te.name.like("%me2%")))
-//                        .orderByFields(List.of(new OrderBy("name", Order.ASC), new OrderBy("id", Order.DESC)));
-//        var rr = dtoProjectionSelect.fetch();
-//        System.out.println("asd");
+        ProjectionSelect<TestEntity, TEDto, QTEDto> dtoProjectionSelect =
+                ProjectionSelect
+                        .build(queryFactory, te, new QTEDto(te.name))
+                        .where(List.of(te.name.like("%me2%")))
+                        .orderByFields(List.of(new OrderBy("name", Order.ASC), new OrderBy("id", Order.DESC)));
+        var rr = dtoProjectionSelect.fetch();
+        System.out.println("asd");
 
 //        List<String> fields = List.of("name");
 //        Predicate predicate = te.name.eq("name1");
