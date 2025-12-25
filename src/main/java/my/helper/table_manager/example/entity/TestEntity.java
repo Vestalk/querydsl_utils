@@ -1,8 +1,10 @@
-package my.helper.table_manager.entity;
+package my.helper.table_manager.example.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -16,5 +18,7 @@ public class TestEntity {
     private Long id;
     @Column(name = "name", columnDefinition = "varchar(255)")
     private String name;
+    @OneToMany(mappedBy = "testEntity")
+    private List<SubTestEntity> subTestEntities;
 
 }

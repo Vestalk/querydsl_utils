@@ -1,4 +1,4 @@
-package my.helper.table_manager;
+package my.helper.table_manager.select;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.EntityPathBase;

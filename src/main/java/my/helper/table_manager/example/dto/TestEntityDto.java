@@ -1,7 +1,6 @@
-package my.helper.table_manager.entity;
+package my.helper.table_manager.example.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -9,12 +8,14 @@ import lombok.Setter;
 @Setter
 @Getter
 @RequiredArgsConstructor
-public class TEDto {
+public class TestEntityDto {
 
     private String name;
+    private String subName;
 
     @QueryProjection
-    public TEDto(String name) {
+    public TestEntityDto(String name, String subName) {
         this.name = name;
+        this.subName = subName;
     }
 }
