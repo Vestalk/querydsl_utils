@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractSelectService {
 
-    protected List<Map<String, Object>> map(List<String> fields, List<Tuple> tuples) {
+    protected List<Map<String, Object>> mapTupleToList(List<String> fields, List<Tuple> tuples) {
         return tuples.stream()
                 .map(tuple -> fields
                         .stream()
@@ -35,13 +36,14 @@ public abstract class AbstractSelectService {
     }
 
     protected OrderSpecifier<?>[] getOrderSpecifiers(Pageable pageable) {
-        return (OrderSpecifier<?>[]) pageable.getSort()
+        List<OrderSpecifier<?>> list = pageable.getSort()
                 .stream()
                 .map(order -> {
                     ComparableExpressionBase<?> path = getFieldMap().get(order.getProperty());
                     return Sort.Direction.ASC.equals(order.getDirection()) ? path.asc() : path.desc();
                 })
-                .toArray();
+                .toList();
+        return list.toArray(new OrderSpecifier<?>[0]);
     }
 
     protected abstract Map<String, ComparableExpressionBase<?>> getFieldMap();

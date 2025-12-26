@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -74,11 +76,33 @@ public class TestEntityProjectionSelectServiceTest {
     @Test
     public void getPage_ByFilters_ByPredicate() {
         Page<TestEntityDto> dtos1 = testEntityProjectionSelectService
-                .getPageByFilters(List.of(), PageRequest.of(0, 10));
+                .getPageByFilters(List.of(), PageRequest.of(0, 10, Sort.by("id").ascending()));
         assertEquals(4, dtos1.getTotalElements());
 
         Page<TestEntityDto> dtos2 = testEntityProjectionSelectService
                 .getPageByPredicate(List.of(), PageRequest.of(0, 10));
         assertEquals(4, dtos2.getTotalElements());
+    }
+
+    @Test
+    public void findAll_fields_param_ByFilters_ByPredicate() {
+        List<Map<String, Object>> list1 = testEntityProjectionSelectService
+                .findAllByFilters(List.of("name"), List.of());
+        assertEquals(4, list1.size());
+
+        List<Map<String, Object>> list2 = testEntityProjectionSelectService
+                .findAllByPredicate(List.of("name"), List.of());
+        assertEquals(4, list2.size());
+    }
+
+    @Test
+    public void getPage_fields_param_ByFilters_ByPredicate() {
+        Page<Map<String, Object>> testEntities1 = testEntityProjectionSelectService
+                .getPageByFilters(List.of("name"), List.of(), PageRequest.of(0, 10, Sort.by("id").ascending()));
+        assertEquals(4, testEntities1.getTotalElements());
+
+        Page<Map<String, Object>> testEntities2 = testEntityProjectionSelectService
+                .getPageByPredicate(List.of("name"), List.of(), PageRequest.of(0, 10));
+        assertEquals(4, testEntities2.getTotalElements());
     }
 }

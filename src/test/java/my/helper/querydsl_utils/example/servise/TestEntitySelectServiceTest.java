@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -74,7 +75,7 @@ public class TestEntitySelectServiceTest {
     @Test
     public void getPage_ByFilters_ByPredicate() {
         Page<TestEntity> testEntities1 = testEntityService
-                .getPageByFilters(List.of(), PageRequest.of(0, 10));
+                .getPageByFilters(List.of(), PageRequest.of(0, 10, Sort.by("id").ascending()));
         assertEquals(3, testEntities1.getTotalElements());
 
         Page<TestEntity> testEntities2 = testEntityService
@@ -94,7 +95,7 @@ public class TestEntitySelectServiceTest {
     @Test
     public void getPage_fields_param_ByFilters_ByPredicate() {
         Page<Map<String, Object>> testEntities1 = testEntityService
-                .getPageByFilters(List.of("name"), List.of(), PageRequest.of(0, 10));
+                .getPageByFilters(List.of("name"), List.of(), PageRequest.of(0, 10, Sort.by("id").ascending()));
         assertEquals(3, testEntities1.getTotalElements());
 
         Page<Map<String, Object>> testEntities2 = testEntityService

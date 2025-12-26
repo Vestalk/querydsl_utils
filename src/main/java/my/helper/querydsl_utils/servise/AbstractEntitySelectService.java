@@ -61,7 +61,7 @@ public abstract class AbstractEntitySelectService<T> extends AbstractSelectServi
                 .where(predicates.toArray(Predicate[]::new))
                 .fetch();
 
-        return map(fields, tuples);
+        return mapTupleToList(fields, tuples);
     }
 
     public Page<Map<String, Object>> getPageByFilters(List<String> fields, List<Filter> filters, Pageable pageable) {
@@ -81,7 +81,7 @@ public abstract class AbstractEntitySelectService<T> extends AbstractSelectServi
             List<Tuple> tuples = pageable.getSort().isUnsorted() ?
                     query.fetch() : query.orderBy(getOrderSpecifiers(pageable)).fetch();
 
-            content = map(fields, tuples);
+            content = mapTupleToList(fields, tuples);
         }
         return new PageImpl<>(content, pageable, total);
     }
