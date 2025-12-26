@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 @Component
-public class TestEntityServiceEntity extends AbstractEntitySelectService<TestEntity> {
+public class TestEntitySelectService extends AbstractEntitySelectService<TestEntity> {
 
     private static final QTestEntity entityPathBase = QTestEntity.testEntity;
     private static final Map<String, ComparableExpressionBase<?>> FIELD_MAP = Map.of(
@@ -18,7 +18,7 @@ public class TestEntityServiceEntity extends AbstractEntitySelectService<TestEnt
             "name", entityPathBase.name
     );
 
-    public TestEntityServiceEntity(JPAQueryFactory jpaQueryFactory) {
+    public TestEntitySelectService(JPAQueryFactory jpaQueryFactory) {
         super(entityPathBase, jpaQueryFactory);
     }
 

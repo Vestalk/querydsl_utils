@@ -3,12 +3,16 @@ package my.helper.querydsl_utils.example.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.List;
+
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "sub_test_entity")
-public class SubTestEntity {
+@Table(name = "test")
+public class TestEntity {
 
     @Id
     @Column(name = "id", unique = true)
@@ -16,8 +20,7 @@ public class SubTestEntity {
     private Long id;
     @Column(name = "name", columnDefinition = "varchar(255)")
     private String name;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "test_entity_id")
-    private TestEntity testEntity;
+    @OneToMany(mappedBy = "testEntity")
+    private List<SubTestEntity> subTestEntities;
 
 }

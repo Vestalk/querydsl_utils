@@ -30,7 +30,7 @@ public class TestEntityProjectionSelectService extends AbstractProjectionSelectS
 
     @Override
     protected JPAQuery<TestEntityDto> modifyQuery(JPAQuery<TestEntityDto> query) {
-        return query.join(testEntity.subTestEntities, subTestEntity);
+        return query.leftJoin(testEntity.subTestEntities, subTestEntity);
     }
 
     @Override
