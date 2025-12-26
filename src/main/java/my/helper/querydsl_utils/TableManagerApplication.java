@@ -1,4 +1,4 @@
-package my.helper.table_manager;
+package my.helper.querydsl_utils;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

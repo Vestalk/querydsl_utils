@@ -1,4 +1,4 @@
-package my.helper.table_manager;
+package my.helper.querydsl_utils;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;

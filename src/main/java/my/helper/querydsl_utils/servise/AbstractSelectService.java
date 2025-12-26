@@ -1,4 +1,4 @@
-package my.helper.table_manager.servise;
+package my.helper.querydsl_utils.servise;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;

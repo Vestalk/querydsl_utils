@@ -1,4 +1,4 @@
-package my.helper.table_manager.servise.other;
+package my.helper.querydsl_utils.servise.other;
 
 public enum FilterType {
 

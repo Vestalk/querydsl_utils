@@ -11,9 +11,9 @@
     </parent>
 
     <groupId>my.helper</groupId>
-    <artifactId>table-manager</artifactId>
+    <artifactId>querydsl-utils</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>table-manager</name>
+    <name>querydsl-utils</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>

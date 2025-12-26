@@ -1,4 +1,4 @@
-package my.helper.table_manager.example.dto;
+package my.helper.querydsl_utils.example.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;

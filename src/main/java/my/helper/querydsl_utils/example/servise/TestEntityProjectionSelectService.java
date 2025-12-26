@@ -1,14 +1,14 @@
-package my.helper.table_manager.example.servise;
+package my.helper.querydsl_utils.example.servise;
 
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import my.helper.table_manager.example.dto.QTestEntityDto;
-import my.helper.table_manager.example.dto.TestEntityDto;
-import my.helper.table_manager.example.entity.QSubTestEntity;
-import my.helper.table_manager.example.entity.QTestEntity;
-import my.helper.table_manager.example.entity.TestEntity;
-import my.helper.table_manager.servise.AbstractProjectionSelectService;
+import my.helper.querydsl_utils.example.dto.QTestEntityDto;
+import my.helper.querydsl_utils.example.dto.TestEntityDto;
+import my.helper.querydsl_utils.example.entity.QSubTestEntity;
+import my.helper.querydsl_utils.example.entity.QTestEntity;
+import my.helper.querydsl_utils.example.entity.TestEntity;
+import my.helper.querydsl_utils.servise.AbstractProjectionSelectService;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

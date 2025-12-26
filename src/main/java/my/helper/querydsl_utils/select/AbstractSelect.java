@@ -1,4 +1,4 @@
-package my.helper.table_manager.select;
+package my.helper.querydsl_utils.select;
 
 import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.OrderSpecifier;

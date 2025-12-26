@@ -1,20 +1,20 @@
-package my.helper.table_manager.example.select;
+package my.helper.querydsl_utils.example.select;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import my.helper.table_manager.example.dto.QTestEntityDto;
-import my.helper.table_manager.example.dto.TestEntityDto;
-import my.helper.table_manager.example.entity.QSubTestEntity;
-import my.helper.table_manager.example.entity.QTestEntity;
-import my.helper.table_manager.example.entity.TestEntity;
-import my.helper.table_manager.select.BaseSelect;
-import my.helper.table_manager.select.ProjectionSelect;
+import my.helper.querydsl_utils.example.dto.QTestEntityDto;
+import my.helper.querydsl_utils.example.dto.TestEntityDto;
+import my.helper.querydsl_utils.example.entity.QSubTestEntity;
+import my.helper.querydsl_utils.example.entity.QTestEntity;
+import my.helper.querydsl_utils.example.entity.TestEntity;
+import my.helper.querydsl_utils.select.BaseSelect;
+import my.helper.querydsl_utils.select.ProjectionSelect;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+//@Component
 @RequiredArgsConstructor
 public class Test {
 

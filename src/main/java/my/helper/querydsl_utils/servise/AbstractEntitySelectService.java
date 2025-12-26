@@ -1,12 +1,12 @@
-package my.helper.table_manager.servise;
+package my.helper.querydsl_utils.servise;
 
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import my.helper.table_manager.servise.other.Filter;
-import my.helper.table_manager.servise.other.FilterToPredicateMapper;
+import my.helper.querydsl_utils.servise.other.Filter;
+import my.helper.querydsl_utils.servise.other.FilterToPredicateMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

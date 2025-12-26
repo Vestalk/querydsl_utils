@@ -1,4 +1,4 @@
-package my.helper.table_manager.example.entity;
+package my.helper.querydsl_utils.example.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

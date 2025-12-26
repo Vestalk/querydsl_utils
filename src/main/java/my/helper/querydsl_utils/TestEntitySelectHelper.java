@@ -1,10 +1,10 @@
-package my.helper.table_manager;
+package my.helper.querydsl_utils;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import my.helper.table_manager.example.entity.QTestEntity;
-import my.helper.table_manager.example.entity.TestEntity;
+import my.helper.querydsl_utils.example.entity.QTestEntity;
+import my.helper.querydsl_utils.example.entity.TestEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package my.helper.table_manager.config;
+package my.helper.querydsl_utils.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

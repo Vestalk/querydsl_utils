@@ -1,4 +1,4 @@
-package my.helper.table_manager.select;
+package my.helper.querydsl_utils.select;
 
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.jpa.impl.JPAQuery;

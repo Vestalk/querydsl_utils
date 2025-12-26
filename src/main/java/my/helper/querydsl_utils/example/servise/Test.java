@@ -1,4 +1,4 @@
-package my.helper.table_manager.example.servise;
+package my.helper.querydsl_utils.example.servise;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
