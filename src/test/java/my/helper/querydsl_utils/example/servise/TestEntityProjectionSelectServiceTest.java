@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -61,9 +63,22 @@ public class TestEntityProjectionSelectServiceTest {
     }
 
     @Test
-    public void testTestEntityProjectionSelectService() {
-        List<TestEntityDto> testEntities = testEntityProjectionSelectService.findAllByPredicate(List.of());
+    public void findAll_ByFilters_ByPredicate() {
+        List<TestEntityDto> dtos1 = testEntityProjectionSelectService.findAllByFilters(List.of());
+        assertEquals(4, dtos1.size());
 
-        assertEquals(4, testEntities.size());
+        List<TestEntityDto> dtos2 = testEntityProjectionSelectService.findAllByPredicate(List.of());
+        assertEquals(4, dtos2.size());
+    }
+
+    @Test
+    public void getPage_ByFilters_ByPredicate() {
+        Page<TestEntityDto> dtos1 = testEntityProjectionSelectService
+                .getPageByFilters(List.of(), PageRequest.of(0, 10));
+        assertEquals(4, dtos1.getTotalElements());
+
+        Page<TestEntityDto> dtos2 = testEntityProjectionSelectService
+                .getPageByPredicate(List.of(), PageRequest.of(0, 10));
+        assertEquals(4, dtos2.getTotalElements());
     }
 }

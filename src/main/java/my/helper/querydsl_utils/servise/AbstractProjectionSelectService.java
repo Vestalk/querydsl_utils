@@ -42,7 +42,8 @@ public abstract class AbstractProjectionSelectService<E, D> extends AbstractSele
         Long total = query.clone().select(entityPathBase.count()).fetchOne();
         List<D> content = new ArrayList<>();
         if (total != 0) {
-            content = query.orderBy(getOrderSpecifiers(pageable)).fetch();
+            content = pageable.getSort().isUnsorted() ?
+                    query.fetch() : query.orderBy(getOrderSpecifiers(pageable)).fetch();
         }
         return new PageImpl<>(content, pageable, total);
     }

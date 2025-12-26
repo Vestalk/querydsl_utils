@@ -16,9 +16,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public abstract class AbstractEntitySelectService<T> extends AbstractSelectService {
@@ -47,7 +44,8 @@ public abstract class AbstractEntitySelectService<T> extends AbstractSelectServi
         Long total = query.clone().select(entityPathBase.count()).fetchOne();
         List<T> content = new ArrayList<>();
         if (total != 0) {
-            content = query.orderBy(getOrderSpecifiers(pageable)).fetch();
+            content = pageable.getSort().isUnsorted() ?
+                    query.fetch() : query.orderBy(getOrderSpecifiers(pageable)).fetch();
         }
         return new PageImpl<>(content, pageable, total);
     }
@@ -63,15 +61,7 @@ public abstract class AbstractEntitySelectService<T> extends AbstractSelectServi
                 .where(predicates.toArray(Predicate[]::new))
                 .fetch();
 
-        return tuples.stream()
-                .map(tuple -> fields
-                        .stream()
-                        .filter(getFieldMap()::containsKey)
-                        .collect(Collectors.toMap(
-                                Function.identity(),
-                                field -> (Object) tuple.get(getFieldMap().get(field))
-                        )))
-                .toList();
+        return map(fields, tuples);
     }
 
     public Page<Map<String, Object>> getPageByFilters(List<String> fields, List<Filter> filters, Pageable pageable) {
@@ -91,23 +81,8 @@ public abstract class AbstractEntitySelectService<T> extends AbstractSelectServi
             List<Tuple> tuples = pageable.getSort().isUnsorted() ?
                     query.fetch() : query.orderBy(getOrderSpecifiers(pageable)).fetch();
 
-            content = tuples.stream()
-                    .map(tuple -> fields
-                            .stream()
-                            .filter(getFieldMap()::containsKey)
-                            .collect(Collectors.toMap(
-                                    Function.identity(),
-                                    field -> (Object) tuple.get(getFieldMap().get(field))
-                            )))
-                    .toList();
+            content = map(fields, tuples);
         }
         return new PageImpl<>(content, pageable, total);
-    }
-
-    private List<? extends Expression<?>> buildSelectExpressions(List<String> fields) {
-        return fields.stream()
-                .map(getFieldMap()::get)
-                .filter(Objects::nonNull)
-                .toList();
     }
 }
