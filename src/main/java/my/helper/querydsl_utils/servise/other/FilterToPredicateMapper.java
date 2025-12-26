@@ -2,6 +2,7 @@ package my.helper.querydsl_utils.servise.other;
 
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
@@ -10,40 +11,51 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 public class FilterToPredicateMapper {
 
     public static List<Predicate> getPredicates(Map<String, ComparableExpressionBase<?>> fieldMap, List<Filter> filters) {
         return filters.stream()
-                .filter(filter -> fieldMap.containsKey(filter.field()))
-                .map(filter -> {
-                    Path<?> path = (Path<?>) fieldMap.get(filter.field());
+                .collect(Collectors.groupingBy(Filter::getField))
+                .values()
+                .stream()
+                .map(group -> buildPredicates(fieldMap, group))
+                .toList();
+    }
 
-                    if (FilterType.EQUALS.equals(filter.type())) {
+    private static Predicate buildPredicates(Map<String, ComparableExpressionBase<?>> fieldMap, List<Filter> filters) {
+        return filters.stream()
+                .filter(filter -> fieldMap.containsKey(filter.getField()))
+                .map(filter -> {
+                    Path<?> path = (Path<?>) fieldMap.get(filter.getField());
+
+                    if (FilterType.EQUALS.equals(filter.getFilterType())) {
                         if (path instanceof StringPath sp) {
-                            return sp.eq(filter.value());
+                            return sp.eq(filter.getValue());
                         }
                         if (path instanceof NumberPath<?> np) {
-                            return buildNumberPredicate(np, filter.value(), NumberPath::eq);
+                            return buildNumberPredicate(np, filter.getValue(), NumberPath::eq);
                         }
-                    } else if (FilterType.NOT_EQUALS.equals(filter.type())) {
+                    } else if (FilterType.NOT_EQUALS.equals(filter.getFilterType())) {
                         if (path instanceof StringPath sp) {
-                            return sp.ne(filter.value());
+                            return sp.ne(filter.getValue());
                         }
                         if (path instanceof NumberPath<?> np) {
-                            return buildNumberPredicate(np, filter.value(), NumberPath::ne);
+                            return buildNumberPredicate(np, filter.getValue(), NumberPath::ne);
                         }
-                    } else if (FilterType.LIKE.equals(filter.type())) {
+                    } else if (FilterType.LIKE.equals(filter.getFilterType())) {
                         if (path instanceof StringPath sp) {
-                            return sp.like("%" + filter.value() + "%");
+                            return sp.like("%" + filter.getValue() + "%");
                         }
                     }
 
                     String err = String
-                            .format("Unsupported Filter Type: `%s` for field: `%s`", filter.type(), filter.field());
+                            .format("Unsupported Filter Type: `%s` for field: `%s`", filter.getFilterType(), filter.getField());
                     throw new IllegalArgumentException(err);
                 })
-                .toList();
+                .reduce((p1, p2) -> ((BooleanExpression) p1).or(p2))
+                .get();
     }
 
     @SuppressWarnings("unchecked")
@@ -64,6 +76,6 @@ public class FilterToPredicateMapper {
             return operator.apply((NumberPath<T>) path, (T) new BigDecimal(value));
         }
 
-        throw new IllegalArgumentException("Unsupported number type: " + type);
+        throw new IllegalArgumentException("Unsupported number filterType: " + type);
     }
 }

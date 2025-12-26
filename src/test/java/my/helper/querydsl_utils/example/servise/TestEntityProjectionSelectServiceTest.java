@@ -5,6 +5,8 @@ import my.helper.querydsl_utils.example.entity.SubTestEntity;
 import my.helper.querydsl_utils.example.entity.TestEntity;
 import my.helper.querydsl_utils.example.repo.SubTestEntityRepo;
 import my.helper.querydsl_utils.example.repo.TestEntityRepo;
+import my.helper.querydsl_utils.servise.other.Filter;
+import my.helper.querydsl_utils.servise.other.FilterType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -66,8 +68,12 @@ public class TestEntityProjectionSelectServiceTest {
 
     @Test
     public void findAll_ByFilters_ByPredicate() {
-        List<TestEntityDto> dtos1 = testEntityProjectionSelectService.findAllByFilters(List.of());
-        assertEquals(4, dtos1.size());
+        List<Filter> filters = List.of(
+                new Filter("name", FilterType.EQUALS, "name1"),
+                new Filter("name", FilterType.EQUALS, "name2")
+        );
+        List<TestEntityDto> dtos1 = testEntityProjectionSelectService.findAllByFilters(filters);
+        assertEquals(3, dtos1.size());
 
         List<TestEntityDto> dtos2 = testEntityProjectionSelectService.findAllByPredicate(List.of());
         assertEquals(4, dtos2.size());
