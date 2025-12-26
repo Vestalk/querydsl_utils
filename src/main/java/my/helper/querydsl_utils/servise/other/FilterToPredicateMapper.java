@@ -11,21 +11,22 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 public class FilterToPredicateMapper {
 
-    public static List<Predicate> getPredicates(Map<String, ComparableExpressionBase<?>> fieldMap, List<Filter> filters) {
-        return filters.stream()
-                .collect(Collectors.groupingBy(Filter::getField))
-                .values()
-                .stream()
+    public static List<Predicate> getPredicates(Map<String, ComparableExpressionBase<?>> fieldMap,
+                                                List<FilterGroup> filterGroups) {
+
+        return filterGroups.stream()
                 .map(group -> buildPredicates(fieldMap, group))
                 .toList();
     }
 
-    private static Predicate buildPredicates(Map<String, ComparableExpressionBase<?>> fieldMap, List<Filter> filters) {
-        return filters.stream()
+    private static Predicate buildPredicates(Map<String, ComparableExpressionBase<?>> fieldMap,
+                                             FilterGroup filterGroup) {
+
+        return filterGroup.getFilters()
+                .stream()
                 .filter(filter -> fieldMap.containsKey(filter.getField()))
                 .map(filter -> {
                     Path<?> path = (Path<?>) fieldMap.get(filter.getField());
@@ -54,7 +55,8 @@ public class FilterToPredicateMapper {
                             .format("Unsupported Filter Type: `%s` for field: `%s`", filter.getFilterType(), filter.getField());
                     throw new IllegalArgumentException(err);
                 })
-                .reduce((p1, p2) -> ((BooleanExpression) p1).or(p2))
+                .reduce((p1, p2) -> CombineType.AND.equals(filterGroup.getCombineType()) ?
+                        ((BooleanExpression) p1).and(p2) : ((BooleanExpression) p1).or(p2))
                 .get();
     }
 

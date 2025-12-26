@@ -4,6 +4,9 @@ import my.helper.querydsl_utils.example.entity.SubTestEntity;
 import my.helper.querydsl_utils.example.entity.TestEntity;
 import my.helper.querydsl_utils.example.repo.SubTestEntityRepo;
 import my.helper.querydsl_utils.example.repo.TestEntityRepo;
+import my.helper.querydsl_utils.servise.other.CombineType;
+import my.helper.querydsl_utils.servise.other.FilterGroup;
+import my.helper.querydsl_utils.servise.other.FilterType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -65,8 +68,13 @@ public class TestEntitySelectServiceTest {
 
     @Test
     public void findAll_ByFilters_ByPredicate() {
-        List<TestEntity> testEntities1 = testEntityService.findAllByFilters(List.of());
-        assertEquals(3, testEntities1.size());
+        FilterGroup filterGroup = new FilterGroup(List.of(
+                new FilterGroup.Filter("name", FilterType.EQUALS, "name1"),
+                new FilterGroup.Filter("name", FilterType.EQUALS, "name2")
+        ), CombineType.OR);
+        List<FilterGroup> filterGroups = List.of(filterGroup);
+        List<TestEntity> testEntities1 = testEntityService.findAllByFilters(filterGroups);
+        assertEquals(2, testEntities1.size());
 
         List<TestEntity> testEntities2 = testEntityService.findAllByPredicate(List.of());
         assertEquals(3, testEntities2.size());
@@ -85,8 +93,13 @@ public class TestEntitySelectServiceTest {
 
     @Test
     public void findAll_fields_param_ByFilters_ByPredicate() {
-        List<Map<String, Object>> list1 = testEntityService.findAllByFilters(List.of("name"), List.of());
-        assertEquals(3, list1.size());
+        FilterGroup filterGroup = new FilterGroup(List.of(
+                new FilterGroup.Filter("name", FilterType.EQUALS, "name1"),
+                new FilterGroup.Filter("name", FilterType.EQUALS, "name2")
+        ), CombineType.OR);
+        List<FilterGroup> filterGroups = List.of(filterGroup);
+        List<Map<String, Object>> list1 = testEntityService.findAllByFilters(List.of("name"), filterGroups);
+        assertEquals(2, list1.size());
 
         List<Map<String, Object>> list2 = testEntityService.findAllByPredicate(List.of("name"), List.of());
         assertEquals(3, list2.size());

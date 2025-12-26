@@ -7,7 +7,7 @@ import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import my.helper.querydsl_utils.servise.other.Filter;
+import my.helper.querydsl_utils.servise.other.FilterGroup;
 import my.helper.querydsl_utils.servise.other.FilterToPredicateMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,8 +24,8 @@ public abstract class AbstractProjectionSelectService<E, D> extends AbstractSele
     private final JPAQueryFactory jpaQueryFactory;
     private final EntityPathBase<E> entityPathBase;
 
-    public List<D> findAllByFilters(List<Filter> filters) {
-        return findAllByPredicate(FilterToPredicateMapper.getPredicates(getFieldMap(), filters));
+    public List<D> findAllByFilters(List<FilterGroup> filterGroups) {
+        return findAllByPredicate(FilterToPredicateMapper.getPredicates(getFieldMap(), filterGroups));
     }
 
     public List<D> findAllByPredicate(List<Predicate> predicates) {
@@ -34,8 +34,8 @@ public abstract class AbstractProjectionSelectService<E, D> extends AbstractSele
                 .fetch();
     }
 
-    public Page<D> getPageByFilters(List<Filter> filters, Pageable pageable) {
-        return getPageByPredicate(FilterToPredicateMapper.getPredicates(getFieldMap(), filters), pageable);
+    public Page<D> getPageByFilters(List<FilterGroup> filterGroups, Pageable pageable) {
+        return getPageByPredicate(FilterToPredicateMapper.getPredicates(getFieldMap(), filterGroups), pageable);
     }
 
     public Page<D> getPageByPredicate(List<Predicate> predicates, Pageable pageable) {
@@ -52,8 +52,8 @@ public abstract class AbstractProjectionSelectService<E, D> extends AbstractSele
         return new PageImpl<>(content, pageable, total);
     }
 
-    public List<Map<String, Object>> findAllByFilters(List<String> fields, List<Filter> filters) {
-        return findAllByPredicate(fields, FilterToPredicateMapper.getPredicates(getFieldMap(), filters));
+    public List<Map<String, Object>> findAllByFilters(List<String> fields, List<FilterGroup> filterGroups) {
+        return findAllByPredicate(fields, FilterToPredicateMapper.getPredicates(getFieldMap(), filterGroups));
     }
 
     public List<Map<String, Object>> findAllByPredicate(List<String> fields, List<Predicate> predicates) {
@@ -65,8 +65,8 @@ public abstract class AbstractProjectionSelectService<E, D> extends AbstractSele
         return mapTupleToList(fields, tuples);
     }
 
-    public Page<Map<String, Object>> getPageByFilters(List<String> fields, List<Filter> filters, Pageable pageable) {
-        return getPageByPredicate(fields, FilterToPredicateMapper.getPredicates(getFieldMap(), filters), pageable);
+    public Page<Map<String, Object>> getPageByFilters(List<String> fields, List<FilterGroup> filterGroups, Pageable pageable) {
+        return getPageByPredicate(fields, FilterToPredicateMapper.getPredicates(getFieldMap(), filterGroups), pageable);
     }
 
     public Page<Map<String, Object>> getPageByPredicate(List<String> fields, List<Predicate> predicates, Pageable pageable) {
