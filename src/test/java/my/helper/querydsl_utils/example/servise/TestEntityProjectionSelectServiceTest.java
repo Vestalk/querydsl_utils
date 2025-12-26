@@ -21,15 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class ServiseTest {
+public class TestEntityProjectionSelectServiceTest {
 
     @Autowired
     private TestEntityRepo testEntityRepo;
     @Autowired
     private SubTestEntityRepo subTestEntityRepo;
 
-    @Autowired
-    private TestEntitySelectService testEntityService;
     @Autowired
     private TestEntityProjectionSelectService testEntityProjectionSelectService;
 
@@ -60,13 +58,6 @@ public class ServiseTest {
         TestEntity te3 = new TestEntity();
         te3.setName("name3");
         testEntityRepo.save(te3);
-    }
-
-    @Test
-    public void testAbstractEntitySelectService() {
-        List<TestEntity> testEntities = testEntityService.findAllByPredicate(List.of());
-
-        assertEquals(3, testEntities.size());
     }
 
     @Test

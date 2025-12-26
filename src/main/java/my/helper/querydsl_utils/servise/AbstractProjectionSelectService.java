@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public abstract class AbstractProjectionSelectService<E, D, QD> extends AbstractSelectService {
+public abstract class AbstractProjectionSelectService<E, D> extends AbstractSelectService {
 
     private final Expression<D> expression;
     private final JPAQueryFactory jpaQueryFactory;

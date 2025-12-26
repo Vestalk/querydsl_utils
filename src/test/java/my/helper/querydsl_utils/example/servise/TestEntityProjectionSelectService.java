@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 @Component
-public class TestEntityProjectionSelectService extends AbstractProjectionSelectService<TestEntity, TestEntityDto, QTestEntity> {
+public class TestEntityProjectionSelectService extends AbstractProjectionSelectService<TestEntity, TestEntityDto> {
 
     private static final QTestEntity testEntity = QTestEntity.testEntity;
     private static final QSubTestEntity subTestEntity = QSubTestEntity.subTestEntity;

@@ -1,5 +1,7 @@
 package my.helper.querydsl_utils.servise;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -13,6 +15,10 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public abstract class AbstractEntitySelectService<T> extends AbstractSelectService {
@@ -44,5 +50,64 @@ public abstract class AbstractEntitySelectService<T> extends AbstractSelectServi
             content = query.orderBy(getOrderSpecifiers(pageable)).fetch();
         }
         return new PageImpl<>(content, pageable, total);
+    }
+
+    public List<Map<String, Object>> findAllByFilters(List<String> fields, List<Filter> filters) {
+        return findAllByPredicate(fields, FilterToPredicateMapper.getPredicates(getFieldMap(), filters));
+    }
+
+    public List<Map<String, Object>> findAllByPredicate(List<String> fields, List<Predicate> predicates) {
+        List<Tuple> tuples = jpaQueryFactory
+                .select(buildSelectExpressions(fields).toArray(Expression[]::new))
+                .from(entityPathBase)
+                .where(predicates.toArray(Predicate[]::new))
+                .fetch();
+
+        return tuples.stream()
+                .map(tuple -> fields
+                        .stream()
+                        .filter(getFieldMap()::containsKey)
+                        .collect(Collectors.toMap(
+                                Function.identity(),
+                                field -> (Object) tuple.get(getFieldMap().get(field))
+                        )))
+                .toList();
+    }
+
+    public Page<Map<String, Object>> getPageByFilters(List<String> fields, List<Filter> filters, Pageable pageable) {
+        return getPageByPredicate(fields, FilterToPredicateMapper.getPredicates(getFieldMap(), filters), pageable);
+    }
+
+    public Page<Map<String, Object>> getPageByPredicate(List<String> fields, List<Predicate> predicates, Pageable pageable) {
+
+        JPAQuery<Tuple> query = jpaQueryFactory
+                .select(buildSelectExpressions(fields).toArray(Expression[]::new))
+                .from(entityPathBase)
+                .where(predicates.toArray(Predicate[]::new));
+
+        Long total = query.clone().select(entityPathBase.count()).fetchOne();
+        List<Map<String, Object>> content = new ArrayList<>();
+        if (total != 0) {
+            List<Tuple> tuples = pageable.getSort().isUnsorted() ?
+                    query.fetch() : query.orderBy(getOrderSpecifiers(pageable)).fetch();
+
+            content = tuples.stream()
+                    .map(tuple -> fields
+                            .stream()
+                            .filter(getFieldMap()::containsKey)
+                            .collect(Collectors.toMap(
+                                    Function.identity(),
+                                    field -> (Object) tuple.get(getFieldMap().get(field))
+                            )))
+                    .toList();
+        }
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    private List<? extends Expression<?>> buildSelectExpressions(List<String> fields) {
+        return fields.stream()
+                .map(getFieldMap()::get)
+                .filter(Objects::nonNull)
+                .toList();
     }
 }
