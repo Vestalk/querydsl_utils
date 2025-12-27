@@ -19,12 +19,6 @@ public class TestEntitySelectService extends AbstractEntitySelectService<TestEnt
     );
 
     public TestEntitySelectService(JPAQueryFactory jpaQueryFactory) {
-        super(entityPathBase, jpaQueryFactory);
-    }
-
-
-    @Override
-    protected Map<String, ComparableExpressionBase<?>> getFieldMap() {
-        return FIELD_MAP;
+        super(FIELD_MAP, entityPathBase, jpaQueryFactory);
     }
 }

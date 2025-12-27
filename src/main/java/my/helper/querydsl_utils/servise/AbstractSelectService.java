@@ -6,6 +6,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.jpa.impl.JPAQuery;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,10 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public abstract class AbstractSelectService {
+
+    private final Map<String, ComparableExpressionBase<?>> FIELD_MAP;
 
     protected <E, T> Page<T> getPageByPredicate(EntityPathBase<E> entityPathBase, JPAQuery<T> query,
                                                 Pageable pageable) {
@@ -85,6 +89,8 @@ public abstract class AbstractSelectService {
         return list.toArray(new OrderSpecifier<?>[0]);
     }
 
-    protected abstract Map<String, ComparableExpressionBase<?>> getFieldMap();
+    protected Map<String, ComparableExpressionBase<?>> getFieldMap() {
+        return FIELD_MAP;
+    }
 
 }

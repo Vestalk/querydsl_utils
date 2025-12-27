@@ -3,10 +3,10 @@ package my.helper.querydsl_utils.servise;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
 import my.helper.querydsl_utils.servise.other.FilterGroup;
 import my.helper.querydsl_utils.servise.other.FilterToPredicateMapper;
 import org.springframework.data.domain.Page;
@@ -15,11 +15,18 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Map;
 
-@RequiredArgsConstructor
 public abstract class AbstractEntitySelectService<T> extends AbstractSelectService {
 
     private final EntityPathBase<T> entityPathBase;
     private final JPAQueryFactory jpaQueryFactory;
+
+    protected AbstractEntitySelectService(Map<String, ComparableExpressionBase<?>> fieldMap,
+                                          EntityPathBase<T> entityPathBase, JPAQueryFactory jpaQueryFactory) {
+
+        super(fieldMap);
+        this.entityPathBase = entityPathBase;
+        this.jpaQueryFactory = jpaQueryFactory;
+    }
 
     public List<T> findAllByFilters(List<FilterGroup> filterGroups) {
         return findAllByPredicate(FilterToPredicateMapper.getPredicates(getFieldMap(), filterGroups));

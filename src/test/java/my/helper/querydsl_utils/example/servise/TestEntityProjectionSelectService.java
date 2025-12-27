@@ -25,16 +25,11 @@ public class TestEntityProjectionSelectService extends AbstractProjectionSelectS
     );
 
     public TestEntityProjectionSelectService(JPAQueryFactory jpaQueryFactory) {
-        super(new QTestEntityDto(testEntity.name, subTestEntity.name), jpaQueryFactory, testEntity);
+        super(FIELD_MAP, new QTestEntityDto(testEntity.name, subTestEntity.name), jpaQueryFactory, testEntity);
     }
 
     @Override
     protected <M> JPAQuery<M> modifyQuery(JPAQuery<M> query) {
         return query.leftJoin(testEntity.subTestEntities, subTestEntity);
-    }
-
-    @Override
-    protected Map<String, ComparableExpressionBase<?>> getFieldMap() {
-        return FIELD_MAP;
     }
 }
