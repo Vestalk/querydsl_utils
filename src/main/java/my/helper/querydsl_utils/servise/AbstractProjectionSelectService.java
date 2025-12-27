@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public abstract class AbstractProjectionSelectService<E, D> extends AbstractSelectService {
@@ -44,10 +45,15 @@ public abstract class AbstractProjectionSelectService<E, D> extends AbstractSele
         query = modifyQuery(query);
 
         Long total = query.clone().select(entityPathBase.count()).fetchOne();
+        if (Objects.isNull(total)) total = 0L;
+
         List<D> content = new ArrayList<>();
         if (total != 0) {
-            content = pageable.getSort().isUnsorted() ?
-                    query.fetch() : query.orderBy(getOrderSpecifiers(pageable)).fetch();
+            JPAQuery<D> tupleJPAQuery = query.offset(pageable.getOffset()).limit(pageable.getPageSize());
+            if (!pageable.getSort().isUnsorted()) {
+                tupleJPAQuery = tupleJPAQuery.orderBy(getOrderSpecifiers(pageable));
+            }
+            content = tupleJPAQuery.fetch();
         }
         return new PageImpl<>(content, pageable, total);
     }
@@ -78,12 +84,15 @@ public abstract class AbstractProjectionSelectService<E, D> extends AbstractSele
         query = modifyQuery(query);
 
         Long total = query.clone().select(entityPathBase.count()).fetchOne();
+        if (Objects.isNull(total)) total = 0L;
+
         List<Map<String, Object>> content = new ArrayList<>();
         if (total != 0) {
-            List<Tuple> tuples = pageable.getSort().isUnsorted() ?
-                    query.fetch() : query.orderBy(getOrderSpecifiers(pageable)).fetch();
-
-            content = mapTupleToList(fields, tuples);
+            JPAQuery<Tuple> tupleJPAQuery = query.offset(pageable.getOffset()).limit(pageable.getPageSize());
+            if (!pageable.getSort().isUnsorted()) {
+                tupleJPAQuery = tupleJPAQuery.orderBy(getOrderSpecifiers(pageable));
+            }
+            content = mapTupleToList(fields, tupleJPAQuery.fetch());
         }
         return new PageImpl<>(content, pageable, total);
     }

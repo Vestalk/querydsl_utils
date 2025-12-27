@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+//@RequiredArgsConstructor
 public abstract class AbstractSelectService {
 
     protected List<Map<String, Object>> mapTupleToList(List<String> fields, List<Tuple> tuples) {
