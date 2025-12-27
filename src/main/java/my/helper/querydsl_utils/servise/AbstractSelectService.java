@@ -4,17 +4,56 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
+import com.querydsl.core.types.dsl.EntityPathBase;
+import com.querydsl.jpa.impl.JPAQuery;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-//@RequiredArgsConstructor
 public abstract class AbstractSelectService {
+
+    protected <E, T> Page<T> getPageByPredicate(EntityPathBase<E> entityPathBase, JPAQuery<T> query,
+                                                Pageable pageable) {
+
+        Long total = query.clone().select(entityPathBase.count()).fetchOne();
+        if (Objects.isNull(total)) total = 0L;
+
+        List<T> content = new ArrayList<>();
+        if (total != 0) {
+            query = query.offset(pageable.getOffset()).limit(pageable.getPageSize());
+            if (!pageable.getSort().isUnsorted()) {
+                query = query.orderBy(getOrderSpecifiers(pageable));
+            }
+            content = query.fetch();
+        }
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    protected <E> Page<Map<String, Object>> getPageByPredicate(
+            EntityPathBase<E> entityPathBase, JPAQuery<Tuple> query,
+            List<String> fields, Pageable pageable) {
+
+        Long total = query.clone().select(entityPathBase.count()).fetchOne();
+        if (Objects.isNull(total)) total = 0L;
+
+        List<Map<String, Object>> content = new ArrayList<>();
+        if (total != 0) {
+            JPAQuery<Tuple> tupleJPAQuery = query.offset(pageable.getOffset()).limit(pageable.getPageSize());
+            if (!pageable.getSort().isUnsorted()) {
+                tupleJPAQuery = tupleJPAQuery.orderBy(getOrderSpecifiers(pageable));
+            }
+            content = mapTupleToList(fields, tupleJPAQuery.fetch());
+        }
+        return new PageImpl<>(content, pageable, total);
+    }
 
     protected List<Map<String, Object>> mapTupleToList(List<String> fields, List<Tuple> tuples) {
         return tuples.stream()
