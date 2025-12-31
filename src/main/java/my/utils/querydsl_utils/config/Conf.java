@@ -2,9 +2,14 @@ package my.utils.querydsl_utils.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import my.utils.querydsl_utils.servise.AbstractEntitySelectService;
+import my.utils.querydsl_utils.servise.AbstractProjectionSelectService;
+import my.utils.querydsl_utils.servise.CommonFieldService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 public class Conf {
@@ -13,6 +18,14 @@ public class Conf {
     @ConditionalOnMissingBean(JPAQueryFactory.class)
     public JPAQueryFactory jpaQueryFactory(EntityManager em) {
         return new JPAQueryFactory(em);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(CommonFieldService.class)
+    public CommonFieldService commonService(
+            List<AbstractEntitySelectService<?>> entitySelectServices,
+            List<AbstractProjectionSelectService<?, ?>> projectionSelectServiceMap) {
+        return new CommonFieldService(entitySelectServices, projectionSelectServiceMap);
     }
 
 }

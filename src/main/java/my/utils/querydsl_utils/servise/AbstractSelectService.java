@@ -6,7 +6,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.jpa.impl.JPAQuery;
-import lombok.RequiredArgsConstructor;
+import my.utils.querydsl_utils.servise.other.FieldInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +19,13 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 public abstract class AbstractSelectService {
 
-    private final Map<String, ComparableExpressionBase<?>> FIELD_MAP;
+    private final Map<String, FieldInfo> FIELD_MAP;
+
+    public AbstractSelectService(Map<String, FieldInfo> fieldInfos) {
+        this.FIELD_MAP = fieldInfos;
+    }
 
     protected <E, T> Page<T> getPageByPredicate(EntityPathBase<E> entityPathBase, JPAQuery<T> query,
                                                 Pageable pageable) {
@@ -66,14 +69,22 @@ public abstract class AbstractSelectService {
                         .filter(getFieldMap()::containsKey)
                         .collect(Collectors.toMap(
                                 Function.identity(),
-                                field -> (Object) tuple.get(getFieldMap().get(field))
+                                field -> (Object) tuple.get(getFieldMap().get(field).getPath())
                         )))
                 .toList();
+    }
+
+    protected Expression<?> getSelectExpressions(String field) {
+        if (getFieldMap().containsKey(field)) {
+            return getFieldMap().get(field).getPath();
+        }
+        throw new RuntimeException("Unsupported field: " + field);
     }
 
     protected List<? extends Expression<?>> buildSelectExpressions(List<String> fields) {
         return fields.stream()
                 .map(getFieldMap()::get)
+                .map(FieldInfo::getPath)
                 .filter(Objects::nonNull)
                 .toList();
     }
@@ -82,15 +93,17 @@ public abstract class AbstractSelectService {
         List<OrderSpecifier<?>> list = pageable.getSort()
                 .stream()
                 .map(order -> {
-                    ComparableExpressionBase<?> path = getFieldMap().get(order.getProperty());
+                    ComparableExpressionBase<?> path = getFieldMap().get(order.getProperty()).getPath();
                     return Sort.Direction.ASC.equals(order.getDirection()) ? path.asc() : path.desc();
                 })
                 .toList();
         return list.toArray(new OrderSpecifier<?>[0]);
     }
 
-    protected Map<String, ComparableExpressionBase<?>> getFieldMap() {
+    public Map<String, FieldInfo> getFieldMap() {
         return FIELD_MAP;
     }
+
+    public abstract List<?> findDistinctFieldValues(String field);
 
 }

@@ -68,6 +68,12 @@ public class TestEntityProjectionSelectServiceTest {
     }
 
     @Test
+    public void findDistinctFieldValues() {
+        List<?> names = testEntityProjectionSelectService.findDistinctFieldValues("subName");
+        assertEquals(4, names.size());
+    }
+
+    @Test
     public void findAll_ByFilters_ByPredicate() {
         FilterGroup filterGroup = new FilterGroup(List.of(
                 new FilterGroup.Filter("name", FilterType.EQUALS, "name1"),

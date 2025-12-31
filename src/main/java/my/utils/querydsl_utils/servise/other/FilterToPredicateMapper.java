@@ -3,7 +3,6 @@ package my.utils.querydsl_utils.servise.other;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 
@@ -14,7 +13,7 @@ import java.util.function.BiFunction;
 
 public class FilterToPredicateMapper {
 
-    public static List<Predicate> getPredicates(Map<String, ComparableExpressionBase<?>> fieldMap,
+    public static List<Predicate> getPredicates(Map<String, FieldInfo> fieldMap,
                                                 List<FilterGroup> filterGroups) {
 
         return filterGroups.stream()
@@ -22,14 +21,14 @@ public class FilterToPredicateMapper {
                 .toList();
     }
 
-    private static Predicate buildPredicates(Map<String, ComparableExpressionBase<?>> fieldMap,
+    private static Predicate buildPredicates(Map<String, FieldInfo> fieldMap,
                                              FilterGroup filterGroup) {
 
         return filterGroup.getFilters()
                 .stream()
                 .filter(filter -> fieldMap.containsKey(filter.getField()))
                 .map(filter -> {
-                    Path<?> path = (Path<?>) fieldMap.get(filter.getField());
+                    Path<?> path = (Path<?>) fieldMap.get(filter.getField()).getPath();
 
                     if (FilterType.EQUALS.equals(filter.getFilterType())) {
                         if (path instanceof StringPath sp) {

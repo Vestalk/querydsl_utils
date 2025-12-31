@@ -3,10 +3,10 @@ package my.utils.querydsl_utils.servise;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import my.utils.querydsl_utils.servise.other.FieldInfo;
 import my.utils.querydsl_utils.servise.other.FilterGroup;
 import my.utils.querydsl_utils.servise.other.FilterToPredicateMapper;
 import org.springframework.data.domain.Page;
@@ -20,12 +20,21 @@ public abstract class AbstractEntitySelectService<T> extends AbstractSelectServi
     private final EntityPathBase<T> entityPathBase;
     private final JPAQueryFactory jpaQueryFactory;
 
-    protected AbstractEntitySelectService(Map<String, ComparableExpressionBase<?>> fieldMap,
+    protected AbstractEntitySelectService(Map<String, FieldInfo> fieldInfos,
                                           EntityPathBase<T> entityPathBase, JPAQueryFactory jpaQueryFactory) {
 
-        super(fieldMap);
+        super(fieldInfos);
         this.entityPathBase = entityPathBase;
         this.jpaQueryFactory = jpaQueryFactory;
+    }
+
+    @Override
+    public List<?> findDistinctFieldValues(String field) {
+        return jpaQueryFactory
+                .select(getSelectExpressions(field))
+                .distinct()
+                .from(entityPathBase)
+                .fetch();
     }
 
     public List<T> findAllByFilters(List<FilterGroup> filterGroups) {

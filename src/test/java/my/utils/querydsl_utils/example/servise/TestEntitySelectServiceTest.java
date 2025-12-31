@@ -67,6 +67,12 @@ public class TestEntitySelectServiceTest {
     }
 
     @Test
+    public void findDistinctFieldValues() {
+        List<?> names = testEntityService.findDistinctFieldValues("name");
+        assertEquals(3, names.size());
+    }
+
+    @Test
     public void findAll_ByFilters_ByPredicate() {
         FilterGroup filterGroup = new FilterGroup(List.of(
                 new FilterGroup.Filter("name", FilterType.EQUALS, "name1"),
