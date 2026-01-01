@@ -75,11 +75,14 @@ public abstract class AbstractProjectionSelectService<E, D> extends AbstractSele
         return mapTupleToList(fields, tuples);
     }
 
-    public Page<Map<String, Object>> getPageByFilters(List<String> fields, List<FilterGroup> filterGroups, Pageable pageable) {
+    public Page<Map<String, Object>> getPageByFilters(List<String> fields, List<FilterGroup> filterGroups,
+                                                      Pageable pageable) {
+
         return getPageByPredicate(fields, FilterToPredicateMapper.getPredicates(getFieldMap(), filterGroups), pageable);
     }
 
-    public Page<Map<String, Object>> getPageByPredicate(List<String> fields, List<Predicate> predicates, Pageable pageable) {
+    public Page<Map<String, Object>> getPageByPredicate(List<String> fields, List<Predicate> predicates,
+                                                        Pageable pageable) {
 
         JPAQuery<Tuple> query = jpaQueryFactory
                 .select(buildSelectExpressions(fields).toArray(Expression[]::new))
