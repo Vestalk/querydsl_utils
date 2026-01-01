@@ -4,9 +4,9 @@ import my.utils.querydsl_utils.example.entity.SubTestEntity;
 import my.utils.querydsl_utils.example.entity.TestEntity;
 import my.utils.querydsl_utils.example.repo.SubTestEntityRepo;
 import my.utils.querydsl_utils.example.repo.TestEntityRepo;
-import my.utils.querydsl_utils.servise.other.CombineType;
-import my.utils.querydsl_utils.servise.other.FilterGroup;
-import my.utils.querydsl_utils.servise.other.FilterType;
+import my.utils.querydsl_utils.servise.other.filter.CombineType;
+import my.utils.querydsl_utils.servise.other.filter.FilterGroup;
+import my.utils.querydsl_utils.servise.other.filter.FilterType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -68,8 +68,14 @@ public class TestEntitySelectServiceTest {
 
     @Test
     public void findDistinctFieldValues() {
-        List<?> names = testEntityService.findDistinctFieldValues("name");
-        assertEquals(3, names.size());
+        FilterGroup filterGroup = new FilterGroup(List.of(
+                new FilterGroup.Filter("name", FilterType.EQUALS, "name1"),
+                new FilterGroup.Filter("name", FilterType.EQUALS, "name2")
+        ), CombineType.OR);
+
+        List<?> names = testEntityService.findDistinctFieldValuesByFilterGroups("name", List.of(filterGroup));
+
+        assertEquals(2, names.size());
     }
 
     @Test

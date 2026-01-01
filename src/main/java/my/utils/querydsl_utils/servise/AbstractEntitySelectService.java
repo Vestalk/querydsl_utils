@@ -6,9 +6,9 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import my.utils.querydsl_utils.servise.other.FieldInfo;
-import my.utils.querydsl_utils.servise.other.FilterGroup;
-import my.utils.querydsl_utils.servise.other.FilterToPredicateMapper;
+import my.utils.querydsl_utils.servise.other.field.FieldInfo;
+import my.utils.querydsl_utils.servise.other.filter.FilterGroup;
+import my.utils.querydsl_utils.servise.other.filter.FilterToPredicateMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -29,9 +29,10 @@ public abstract class AbstractEntitySelectService<T> extends AbstractSelectServi
     }
 
     @Override
-    public List<?> findDistinctFieldValues(String field) {
+    public List<?> findDistinctFieldValuesByPredicates(String field, List<Predicate> predicates) {
         return jpaQueryFactory
                 .select(getSelectExpressions(field))
+                .where(predicates.toArray(Predicate[]::new))
                 .distinct()
                 .from(entityPathBase)
                 .fetch();

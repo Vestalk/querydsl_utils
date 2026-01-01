@@ -1,8 +1,9 @@
 package my.utils.querydsl_utils.servise;
 
-import my.utils.querydsl_utils.servise.other.FieldInfo;
-import my.utils.querydsl_utils.servise.other.FieldInfoDto;
-import my.utils.querydsl_utils.servise.other.FieldType;
+import my.utils.querydsl_utils.servise.other.field.FieldInfo;
+import my.utils.querydsl_utils.servise.other.field.FieldInfoDto;
+import my.utils.querydsl_utils.servise.other.field.FieldType;
+import my.utils.querydsl_utils.servise.other.filter.FilterGroup;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -23,18 +24,14 @@ public class CommonFieldService {
     }
 
     private static <S> Map<String, S> initServiceMap(List<S> services, int genericIndex) {
-        Map<String, S> map = new HashMap<>();
 
+        Map<String, S> map = new HashMap<>();
         for (S s : services) {
             Type gs = s.getClass().getGenericSuperclass();
-            if (!(gs instanceof ParameterizedType pt)) {
-                continue;
-            }
-
+            if (!(gs instanceof ParameterizedType pt)) continue;
             Type type = pt.getActualTypeArguments()[genericIndex];
             Class<?> clazz = (Class<?>) type;
             String masterType = clazz.getSimpleName();
-
             map.put(masterType, s);
         }
 
@@ -67,11 +64,11 @@ public class CommonFieldService {
                 .toList();
     }
 
-    public List<?> findDistinctFieldValues(String masterType, String field) {
+    public List<?> findDistinctFieldValues(String masterType, String field, List<FilterGroup> filterGroups) {
         if (entitySelectServices.containsKey(masterType)) {
-            return entitySelectServices.get(masterType).findDistinctFieldValues(field);
+            return entitySelectServices.get(masterType).findDistinctFieldValuesByFilterGroups(field, filterGroups);
         } else if (projectionSelectServiceMap.containsKey(masterType)) {
-            return projectionSelectServiceMap.get(masterType).findDistinctFieldValues(field);
+            return projectionSelectServiceMap.get(masterType).findDistinctFieldValuesByFilterGroups(field, filterGroups);
         }
         throw new RuntimeException("Unsupported MasterType: " + masterType);
     }

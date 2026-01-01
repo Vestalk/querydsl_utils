@@ -1,10 +1,11 @@
-package my.utils.querydsl_utils.servise.other;
+package my.utils.querydsl_utils.servise.other.filter;
 
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
+import my.utils.querydsl_utils.servise.other.field.FieldInfo;
 
 import java.math.BigDecimal;
 import java.util.List;

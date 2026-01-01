@@ -1,4 +1,4 @@
-package my.utils.querydsl_utils.servise.other;
+package my.utils.querydsl_utils.servise.other.filter;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

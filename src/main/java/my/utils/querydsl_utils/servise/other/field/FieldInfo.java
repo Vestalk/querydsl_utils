@@ -1,4 +1,4 @@
-package my.utils.querydsl_utils.servise.other;
+package my.utils.querydsl_utils.servise.other.field;
 
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import lombok.Builder;

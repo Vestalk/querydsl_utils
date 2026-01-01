@@ -3,10 +3,13 @@ package my.utils.querydsl_utils.servise;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.jpa.impl.JPAQuery;
-import my.utils.querydsl_utils.servise.other.FieldInfo;
+import my.utils.querydsl_utils.servise.other.field.FieldInfo;
+import my.utils.querydsl_utils.servise.other.filter.FilterGroup;
+import my.utils.querydsl_utils.servise.other.filter.FilterToPredicateMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -104,6 +107,11 @@ public abstract class AbstractSelectService {
         return FIELD_MAP;
     }
 
-    public abstract List<?> findDistinctFieldValues(String field);
+    public List<?> findDistinctFieldValuesByFilterGroups(String field, List<FilterGroup> filterGroups) {
+        return findDistinctFieldValuesByPredicates(
+                field, FilterToPredicateMapper.getPredicates(getFieldMap(), filterGroups));
+    }
+
+    public abstract List<?> findDistinctFieldValuesByPredicates(String field, List<Predicate> predicates);
 
 }

@@ -8,8 +8,8 @@ import my.utils.querydsl_utils.example.entity.QSubTestEntity;
 import my.utils.querydsl_utils.example.entity.QTestEntity;
 import my.utils.querydsl_utils.example.entity.TestEntity;
 import my.utils.querydsl_utils.servise.AbstractProjectionSelectService;
-import my.utils.querydsl_utils.servise.other.FieldInfo;
-import my.utils.querydsl_utils.servise.other.FieldType;
+import my.utils.querydsl_utils.servise.other.field.FieldInfo;
+import my.utils.querydsl_utils.servise.other.field.FieldType;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
