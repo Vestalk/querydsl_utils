@@ -67,13 +67,13 @@ class CommonFieldServiceTest {
 
     @Test
     public void getFieldInfoDto__TestEntity() {
-        List<FieldInfoDto> testEntityFieldInfos = commonFieldService.getFieldInfoDto("TestEntity");
+        List<FieldInfoDto> testEntityFieldInfos = commonFieldService.getFieldInfoDto("test-entity");
         assertEquals(2, testEntityFieldInfos.size());
     }
 
     @Test
     public void getFieldInfoDto__TestEntityDto() {
-        List<FieldInfoDto> subTestEntityFieldInfos = commonFieldService.getFieldInfoDto("TestEntityDto");
+        List<FieldInfoDto> subTestEntityFieldInfos = commonFieldService.getFieldInfoDto("test-entity-dto");
         assertEquals(3, subTestEntityFieldInfos.size());
     }
 
@@ -91,7 +91,7 @@ class CommonFieldServiceTest {
         ), CombineType.OR);
 
         List<?> values = commonFieldService
-                .findDistinctFieldValues("TestEntity", "name", List.of(filterGroup));
+                .findDistinctFieldValues("test-entity", "name", List.of(filterGroup));
 
         assertEquals(2, values.size());
     }
@@ -104,7 +104,7 @@ class CommonFieldServiceTest {
         ), CombineType.OR);
 
         List<?> values = commonFieldService
-                .findDistinctFieldValues("TestEntityDto", "subName", List.of(filterGroup));
+                .findDistinctFieldValues("test-entity-dto", "subName", List.of(filterGroup));
 
         assertEquals(2, values.size());
     }

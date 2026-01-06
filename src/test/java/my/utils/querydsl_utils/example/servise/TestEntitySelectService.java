@@ -22,4 +22,9 @@ public class TestEntitySelectService extends AbstractEntitySelectService<TestEnt
     public TestEntitySelectService(JPAQueryFactory jpaQueryFactory) {
         super(FIELD_MAP, entityPathBase, jpaQueryFactory);
     }
+
+    @Override
+    public String getMasterType() {
+        return "test-entity";
+    }
 }

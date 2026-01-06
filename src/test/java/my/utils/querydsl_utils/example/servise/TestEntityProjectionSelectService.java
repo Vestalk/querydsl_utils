@@ -33,4 +33,9 @@ public class TestEntityProjectionSelectService extends AbstractProjectionSelectS
     protected <M> JPAQuery<M> modifyQuery(JPAQuery<M> query) {
         return query.leftJoin(testEntity.subTestEntities, subTestEntity);
     }
+
+    @Override
+    public String getMasterType() {
+        return "test-entity-dto";
+    }
 }

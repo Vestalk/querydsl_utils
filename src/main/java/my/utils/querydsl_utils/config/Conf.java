@@ -2,8 +2,7 @@ package my.utils.querydsl_utils.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import my.utils.querydsl_utils.servise.AbstractEntitySelectService;
-import my.utils.querydsl_utils.servise.AbstractProjectionSelectService;
+import my.utils.querydsl_utils.servise.AbstractSelectService;
 import my.utils.querydsl_utils.servise.CommonFieldService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -22,10 +21,8 @@ public class Conf {
 
     @Bean
     @ConditionalOnMissingBean(CommonFieldService.class)
-    public CommonFieldService commonService(
-            List<AbstractEntitySelectService<?>> entitySelectServices,
-            List<AbstractProjectionSelectService<?, ?>> projectionSelectServiceMap) {
-        return new CommonFieldService(entitySelectServices, projectionSelectServiceMap);
+    public CommonFieldService commonService(List<AbstractSelectService> entitySelectServices) {
+        return new CommonFieldService(entitySelectServices);
     }
 
 }

@@ -5,49 +5,28 @@ import my.utils.querydsl_utils.servise.other.field.FieldInfoDto;
 import my.utils.querydsl_utils.servise.other.field.FieldType;
 import my.utils.querydsl_utils.servise.other.filter.FilterGroup;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CommonFieldService {
 
-    private final Map<String, AbstractEntitySelectService<?>> entitySelectServices;
-    private final Map<String, AbstractProjectionSelectService<?, ?>> projectionSelectServiceMap;
+    private final Map<String, AbstractSelectService> selectServices;
 
-    public CommonFieldService(List<AbstractEntitySelectService<?>> entitySelectServices,
-                              List<AbstractProjectionSelectService<?, ?>> projectionSelectServices) {
+    public CommonFieldService(List<AbstractSelectService> entitySelectServices) {
 
-        this.entitySelectServices = initServiceMap(entitySelectServices, 0);
-        this.projectionSelectServiceMap = initServiceMap(projectionSelectServices, 1);
-    }
-
-    private static <S> Map<String, S> initServiceMap(List<S> services, int genericIndex) {
-
-        Map<String, S> map = new HashMap<>();
-        for (S s : services) {
-            Type gs = s.getClass().getGenericSuperclass();
-            if (!(gs instanceof ParameterizedType pt)) continue;
-            Type type = pt.getActualTypeArguments()[genericIndex];
-            Class<?> clazz = (Class<?>) type;
-            String masterType = clazz.getSimpleName();
-            map.put(masterType, s);
-        }
-
-        return map;
+        this.selectServices = initServiceMap(entitySelectServices);
     }
 
     public List<FieldInfoDto> getFieldInfoDto(String masterType) {
-        if (entitySelectServices.containsKey(masterType)) {
-            return serviceMapToFieldInfoDtos(entitySelectServices, masterType);
-        } else if (projectionSelectServiceMap.containsKey(masterType)) {
-            return serviceMapToFieldInfoDtos(projectionSelectServiceMap, masterType);
+        if (selectServices.containsKey(masterType)) {
+            return serviceMapToFieldInfoDtos(selectServices, masterType);
         }
         throw new RuntimeException("Unsupported MasterType: " + masterType);
     }
 
-    private List<FieldInfoDto> serviceMapToFieldInfoDtos(Map<String, ? extends AbstractSelectService> serviceMap,
+    private List<FieldInfoDto> serviceMapToFieldInfoDtos(Map<String, AbstractSelectService> serviceMap,
                                                          String masterType) {
 
         return serviceMap.get(masterType)
@@ -65,11 +44,25 @@ public class CommonFieldService {
     }
 
     public List<?> findDistinctFieldValues(String masterType, String field, List<FilterGroup> filterGroups) {
-        if (entitySelectServices.containsKey(masterType)) {
-            return entitySelectServices.get(masterType).findDistinctFieldValuesByFilterGroups(field, filterGroups);
-        } else if (projectionSelectServiceMap.containsKey(masterType)) {
-            return projectionSelectServiceMap.get(masterType).findDistinctFieldValuesByFilterGroups(field, filterGroups);
+        if (selectServices.containsKey(masterType)) {
+            return selectServices.get(masterType).findDistinctFieldValuesByFilterGroups(field, filterGroups);
         }
         throw new RuntimeException("Unsupported MasterType: " + masterType);
+    }
+
+    private Map<String, AbstractSelectService> initServiceMap(
+            List<AbstractSelectService> services) {
+
+        return services.stream()
+                .collect(Collectors.toMap(
+                        AbstractSelectService::getMasterType,
+                        Function.identity(),
+                        (a, b) -> {
+                            String err = String
+                                    .format("Duplicate Master Type: %s (%s %s)",
+                                            a.getMasterType(), a.getClass().getSimpleName(), b.getClass().getSimpleName());
+                            throw new IllegalStateException(err);
+                        }
+                ));
     }
 }
