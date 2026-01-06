@@ -43,7 +43,7 @@ public class CommonFieldService {
                 .toList();
     }
 
-    public List<?> findDistinctFieldValues(String masterType, String field, List<FilterGroup> filterGroups) {
+    public List<?> findDistinctFieldValuesByFilterGroups(String masterType, String field, List<FilterGroup> filterGroups) {
         if (selectServices.containsKey(masterType)) {
             return selectServices.get(masterType).findDistinctFieldValuesByFilterGroups(field, filterGroups);
         }

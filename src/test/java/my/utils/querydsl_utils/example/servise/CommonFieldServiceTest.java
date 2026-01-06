@@ -91,7 +91,7 @@ class CommonFieldServiceTest {
         ), CombineType.OR);
 
         List<?> values = commonFieldService
-                .findDistinctFieldValues("test-entity", "name", List.of(filterGroup));
+                .findDistinctFieldValuesByFilterGroups("test-entity", "name", List.of(filterGroup));
 
         assertEquals(2, values.size());
     }
@@ -104,9 +104,16 @@ class CommonFieldServiceTest {
         ), CombineType.OR);
 
         List<?> values = commonFieldService
-                .findDistinctFieldValues("test-entity-dto", "subName", List.of(filterGroup));
+                .findDistinctFieldValuesByFilterGroups("test-entity-dto", "subName", List.of(filterGroup));
 
         assertEquals(2, values.size());
+    }
+
+    @Test
+    public void findDistinctFieldValues__Unsupported_MasterType() {
+        assertThrows(RuntimeException.class, () ->
+                commonFieldService
+                        .findDistinctFieldValuesByFilterGroups("Unsupported_MasterType", "subName", List.of()));
     }
 
 }

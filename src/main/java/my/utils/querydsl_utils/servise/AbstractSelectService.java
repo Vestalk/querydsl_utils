@@ -112,7 +112,7 @@ public abstract class AbstractSelectService {
                 field, FilterToPredicateMapper.getPredicates(getFieldMap(), filterGroups));
     }
 
-    public abstract String getMasterType();
     public abstract List<?> findDistinctFieldValuesByPredicates(String field, List<Predicate> predicates);
 
+    public abstract String getMasterType();
 }
