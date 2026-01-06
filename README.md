@@ -128,44 +128,6 @@ Page<TestEntityDto> page = service.getPageByFilters(filters, pageable);
 
 ---
 
-## Dynamic Field Selection
-
-Partial selects are returned as:
-
-```java
-Map<String, Object>
-```
-
-Example response:
-
-```json
-{
-  "id": 10,
-  "name": "Order #10",
-  "amount": 150
-}
-```
-
-Fields not present in `FIELD_MAP` are automatically rejected.
-
----
-
-## Distinct Field Queries
-
-```java
-findDistinctFieldValuesByFilterGroups("status", filters)
-```
-
-Generates:
-
-```sql
-SELECT DISTINCT status FROM ... WHERE ...
-```
-
-Supported for both entity and projection services.
-
----
-
 ## Service Identification (`masterType`)
 
 Each service must define a unique identifier:
@@ -182,24 +144,6 @@ This allows:
 * service auto-registration
 * lookup via `Map<String, AbstractSelectService>`
 * validation of duplicate services at startup
-
----
-
-## Usage Examples
-
-
-
-### Projection / DTO Select Service Example
-
-
-
-## Best Practices
-
-* Ensure `masterType` is unique
-* Keep `FIELD_MAP` immutable
-* Validate API field names early
-* Use `AbstractEntitySelectService` for simple queries
-* Use `AbstractProjectionSelectService` for joins and aggregations
 
 ---
 
