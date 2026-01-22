@@ -8,7 +8,6 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import my.utils.querydsl_utils.servise.other.field.FieldInfo;
 import my.utils.querydsl_utils.servise.other.filter.FilterGroup;
-import my.utils.querydsl_utils.servise.other.filter.FilterToPredicateMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -39,7 +38,7 @@ public abstract class AbstractEntitySelectService<T> extends AbstractSelectServi
     }
 
     public List<T> findAllByFilters(List<FilterGroup> filterGroups) {
-        return findAllByPredicate(FilterToPredicateMapper.getPredicates(getFieldMap(), filterGroups));
+        return findAllByPredicate(filterToPredicateMapper.getPredicates(getFieldMap(), filterGroups));
     }
 
     public List<T> findAllByPredicate(List<Predicate> predicates) {
@@ -50,7 +49,7 @@ public abstract class AbstractEntitySelectService<T> extends AbstractSelectServi
     }
 
     public Page<T> getPageByFilters(List<FilterGroup> filterGroups, Pageable pageable) {
-        return getPageByPredicate(FilterToPredicateMapper.getPredicates(getFieldMap(), filterGroups), pageable);
+        return getPageByPredicate(filterToPredicateMapper.getPredicates(getFieldMap(), filterGroups), pageable);
     }
 
     public Page<T> getPageByPredicate(List<Predicate> predicates, Pageable pageable) {
@@ -61,7 +60,7 @@ public abstract class AbstractEntitySelectService<T> extends AbstractSelectServi
     }
 
     public List<Map<String, Object>> findAllByFilters(List<String> fields, List<FilterGroup> filterGroups) {
-        return findAllByPredicate(fields, FilterToPredicateMapper.getPredicates(getFieldMap(), filterGroups));
+        return findAllByPredicate(fields, filterToPredicateMapper.getPredicates(getFieldMap(), filterGroups));
     }
 
     public List<Map<String, Object>> findAllByPredicate(List<String> fields, List<Predicate> predicates) {
@@ -77,7 +76,7 @@ public abstract class AbstractEntitySelectService<T> extends AbstractSelectServi
     public Page<Map<String, Object>> getPageByFilters(List<String> fields, List<FilterGroup> filterGroups,
                                                       Pageable pageable) {
 
-        return getPageByPredicate(fields, FilterToPredicateMapper.getPredicates(getFieldMap(), filterGroups), pageable);
+        return getPageByPredicate(fields, filterToPredicateMapper.getPredicates(getFieldMap(), filterGroups), pageable);
     }
 
     public Page<Map<String, Object>> getPageByPredicate(List<String> fields, List<Predicate> predicates,

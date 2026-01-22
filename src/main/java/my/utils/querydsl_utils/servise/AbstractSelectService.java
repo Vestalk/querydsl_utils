@@ -10,6 +10,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import my.utils.querydsl_utils.servise.other.field.FieldInfo;
 import my.utils.querydsl_utils.servise.other.filter.FilterGroup;
 import my.utils.querydsl_utils.servise.other.filter.FilterToPredicateMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,9 @@ import java.util.stream.Collectors;
 public abstract class AbstractSelectService {
 
     private final Map<String, FieldInfo> FIELD_MAP;
+
+    @Autowired
+    protected FilterToPredicateMapper filterToPredicateMapper;
 
     public AbstractSelectService(Map<String, FieldInfo> fieldInfos) {
         this.FIELD_MAP = fieldInfos;
@@ -109,7 +113,7 @@ public abstract class AbstractSelectService {
 
     public List<?> findDistinctFieldValuesByFilterGroups(String field, List<FilterGroup> filterGroups) {
         return findDistinctFieldValuesByPredicates(
-                field, FilterToPredicateMapper.getPredicates(getFieldMap(), filterGroups));
+                field, filterToPredicateMapper.getPredicates(getFieldMap(), filterGroups));
     }
 
     public abstract List<?> findDistinctFieldValuesByPredicates(String field, List<Predicate> predicates);

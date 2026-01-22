@@ -68,7 +68,7 @@ class CommonFieldServiceTest {
     @Test
     public void getFieldInfoDto__TestEntity() {
         List<FieldInfoDto> testEntityFieldInfos = commonFieldService.getFieldInfoDto("test-entity");
-        assertEquals(2, testEntityFieldInfos.size());
+        assertEquals(5, testEntityFieldInfos.size());
     }
 
     @Test

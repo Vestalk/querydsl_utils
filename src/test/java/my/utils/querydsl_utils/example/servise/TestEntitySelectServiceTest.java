@@ -18,6 +18,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +44,9 @@ public class TestEntitySelectServiceTest {
     public void initDB() {
         TestEntity te1 = new TestEntity();
         te1.setName("name1");
+        te1.setTime(LocalTime.now());
+        te1.setDate(LocalDate.now());
+        te1.setDateTime(LocalDateTime.now());
         SubTestEntity ste1 = new SubTestEntity();
         ste1.setName("subName1");
         ste1.setTestEntity(te1);
@@ -50,6 +56,11 @@ public class TestEntitySelectServiceTest {
 
         TestEntity te2 = new TestEntity();
         te2.setName("name2");
+        LocalTime lt = LocalTime.of(12, 30);
+        LocalDate ld = LocalDate.of(2026, 1, 1);
+        te2.setTime(lt);
+        te2.setDate(ld);
+        te2.setDateTime(LocalDateTime.of(ld, lt));
         SubTestEntity ste2 = new SubTestEntity();
         ste2.setName("subName2");
         ste2.setTestEntity(te2);
@@ -63,6 +74,9 @@ public class TestEntitySelectServiceTest {
 
         TestEntity te3 = new TestEntity();
         te3.setName("name3");
+        te3.setTime(LocalTime.now());
+        te3.setDate(LocalDate.now());
+        te3.setDateTime(LocalDateTime.now());
         testEntityRepo.save(te3);
     }
 
@@ -80,13 +94,18 @@ public class TestEntitySelectServiceTest {
 
     @Test
     public void findAll_ByFilters_ByPredicate() {
-        FilterGroup filterGroup = new FilterGroup(List.of(
+
+        FilterGroup filterGroup1 = new FilterGroup(List.of(
                 new FilterGroup.Filter("name", FilterType.EQUALS, "name1"),
                 new FilterGroup.Filter("name", FilterType.EQUALS, "name2")
         ), CombineType.OR);
-        List<FilterGroup> filterGroups = List.of(filterGroup);
+        FilterGroup filterGroup2 = new FilterGroup(List.of(
+                new FilterGroup.Filter("dateTime", FilterType.BEFORE, "2026-01-01 12:35:00")
+        ));
+
+        List<FilterGroup> filterGroups = List.of(filterGroup1, filterGroup2);
         List<TestEntity> testEntities1 = testEntityService.findAllByFilters(filterGroups);
-        assertEquals(2, testEntities1.size());
+        assertEquals(1, testEntities1.size());
 
         List<TestEntity> testEntities2 = testEntityService.findAllByPredicate(List.of());
         assertEquals(3, testEntities2.size());
