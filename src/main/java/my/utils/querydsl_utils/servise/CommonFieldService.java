@@ -15,7 +15,6 @@ public class CommonFieldService {
     private final Map<String, AbstractSelectService> selectServices;
 
     public CommonFieldService(List<AbstractSelectService> entitySelectServices) {
-
         this.selectServices = initServiceMap(entitySelectServices);
     }
 

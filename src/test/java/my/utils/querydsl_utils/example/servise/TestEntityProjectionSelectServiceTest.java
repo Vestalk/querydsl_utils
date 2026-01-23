@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -118,8 +119,10 @@ public class TestEntityProjectionSelectServiceTest {
 
     @Test
     public void getPage_fields_param_ByFilters_ByPredicate() {
+        Sort sort = Sort.by("id").ascending();
+        Pageable pageRequest = PageRequest.of(0, 10, sort);
         Page<Map<String, Object>> testEntities1 = testEntityProjectionSelectService
-                .getPageByFilters(List.of("name"), List.of(), PageRequest.of(0, 10, Sort.by("id").ascending()));
+                .getPageByFilters(List.of("name"), List.of(), pageRequest);
         assertEquals(4, testEntities1.getTotalElements());
 
         Page<Map<String, Object>> testEntities2 = testEntityProjectionSelectService
