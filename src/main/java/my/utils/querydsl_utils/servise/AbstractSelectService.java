@@ -16,11 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class AbstractSelectService {
@@ -70,14 +66,15 @@ public abstract class AbstractSelectService {
     }
 
     protected List<Map<String, Object>> mapTupleToList(List<String> fields, List<Tuple> tuples) {
+        Set<String> allowedFields = fields.stream().filter(getFieldMap()::containsKey).collect(Collectors.toSet());
         return tuples.stream()
-                .map(tuple -> fields
-                        .stream()
-                        .filter(getFieldMap()::containsKey)
-                        .collect(Collectors.toMap(
-                                Function.identity(),
-                                field -> (Object) tuple.get(getFieldMap().get(field).getPath())
-                        )))
+                .map(tuple -> {
+                    Map<String, Object> map = new HashMap<>();
+                    for (String field : allowedFields) {
+                        map.put(field, tuple.get(getFieldMap().get(field).getPath()));
+                    }
+                    return map;
+                })
                 .toList();
     }
 

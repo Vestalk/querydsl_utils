@@ -128,7 +128,7 @@ Page<TestEntityDto> page = service.getPageByFilters(filters, pageable);
 
 ---
 
-## Service Identification (`masterType`)
+### Service Identification (`masterType`)
 
 Each service must define a unique identifier:
 
@@ -147,34 +147,13 @@ This allows:
 
 ---
 
-## CommonFieldService
+## CommonService
 
 ### Purpose
 
 `CommonFieldService` is a **facade / registry service** that provides a unified access point to all `AbstractSelectService` implementations.
 
 It resolves services by `masterType` and exposes common read-oriented operations that are **entity-agnostic**.
-
-Typical use cases:
-
-* building dynamic UI filters
-* retrieving available fields and metadata
-* fetching distinct field values across different domains
-
----
-
-### Service Registration
-
-All `AbstractSelectService` implementations are automatically collected by Spring and registered internally:
-
-```java
-public CommonFieldService(List<AbstractSelectService> entitySelectServices) {
-    this.selectServices = initServiceMap(entitySelectServices);
-}
-```
-- [CommonFieldService](src/main/java/my/utils/querydsl_utils/servise/CommonFieldService.java)
-- [CommonFieldServiceTest](src/test/java/my/utils/querydsl_utils/example/servise/CommonFieldServiceTest.java)
-
 Each service **must define a unique `masterType`**.
 
 Duplicate `masterType` values will cause application startup to fail:
@@ -182,6 +161,15 @@ Duplicate `masterType` values will cause application startup to fail:
 ```text
 IllegalStateException: Duplicate Master Type: test-entity (ServiceA ServiceB)
 ```
+
+- [CommonFieldService](src/main/java/my/utils/querydsl_utils/servise/CommonFieldService.java)
+- [CommonFieldServiceTest](src/test/java/my/utils/querydsl_utils/example/servise/CommonFieldServiceTest.java)
+
+Typical use cases:
+
+* building dynamic UI filters
+* retrieving available fields and metadata
+* fetching distinct field values across different domains
 
 ---
 
