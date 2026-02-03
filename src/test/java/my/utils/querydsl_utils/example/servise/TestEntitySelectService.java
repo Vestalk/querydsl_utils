@@ -10,16 +10,18 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+import static my.utils.querydsl_utils.example.entity.TestEntity.Fields.*;
+
 @Component
 public class TestEntitySelectService extends AbstractEntitySelectService<TestEntity> {
 
     private static final QTestEntity entityPathBase = QTestEntity.testEntity;
     private static final Map<String, FieldInfo> FIELD_MAP = Map.of(
-            "id", new FieldInfo("ID", FieldType.NUMERIC, entityPathBase.id),
-            "name", new FieldInfo("Name", FieldType.STRING, entityPathBase.name),
-            "time", new FieldInfo("Time", FieldType.TIME, entityPathBase.time),
-            "date", new FieldInfo("Date", FieldType.DATE, entityPathBase.date),
-            "dateTime", new FieldInfo("Date/Time", FieldType.DATE_TIME, entityPathBase.dateTime)
+            id, new FieldInfo("ID", FieldType.NUMERIC, entityPathBase.id),
+            name, new FieldInfo("Name", FieldType.STRING, entityPathBase.name),
+            time, new FieldInfo("Time", FieldType.TIME, entityPathBase.time),
+            date, new FieldInfo("Date", FieldType.DATE, entityPathBase.date),
+            dateTime, new FieldInfo("Date/Time", FieldType.DATE_TIME, entityPathBase.dateTime)
     );
 
     public TestEntitySelectService(JPAQueryFactory jpaQueryFactory) {

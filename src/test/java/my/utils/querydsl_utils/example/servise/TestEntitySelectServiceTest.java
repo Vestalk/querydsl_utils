@@ -24,6 +24,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
+import static my.utils.querydsl_utils.example.entity.TestEntity.Fields.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -83,11 +84,11 @@ public class TestEntitySelectServiceTest {
     @Test
     public void findDistinctFieldValues() {
         FilterGroup filterGroup = new FilterGroup(List.of(
-                new FilterGroup.Filter("name", FilterType.EQUALS, "name1"),
-                new FilterGroup.Filter("name", FilterType.EQUALS, "name2")
+                new FilterGroup.Filter(name, FilterType.EQUALS, "name1"),
+                new FilterGroup.Filter(name, FilterType.EQUALS, "name2")
         ), CombineType.OR);
 
-        List<?> names = testEntityService.findDistinctFieldValuesByFilterGroups("name", List.of(filterGroup));
+        List<?> names = testEntityService.findDistinctFieldValuesByFilterGroups(name, List.of(filterGroup));
 
         assertEquals(2, names.size());
     }
@@ -96,11 +97,11 @@ public class TestEntitySelectServiceTest {
     public void findAll_ByFilters_ByPredicate() {
 
         FilterGroup filterGroup1 = new FilterGroup(List.of(
-                new FilterGroup.Filter("name", FilterType.EQUALS, "name1"),
-                new FilterGroup.Filter("name", FilterType.EQUALS, "name2")
+                new FilterGroup.Filter(name, FilterType.EQUALS, "name1"),
+                new FilterGroup.Filter(name, FilterType.EQUALS, "name2")
         ), CombineType.OR);
         FilterGroup filterGroup2 = new FilterGroup(List.of(
-                new FilterGroup.Filter("dateTime", FilterType.BEFORE, "2026-01-01 12:35:00")
+                new FilterGroup.Filter("dateTime", FilterType.BEFORE, "01-01-2026 12:35:00")
         ));
 
         List<FilterGroup> filterGroups = List.of(filterGroup1, filterGroup2);
@@ -114,7 +115,7 @@ public class TestEntitySelectServiceTest {
     @Test
     public void getPage_ByFilters_ByPredicate() {
         Page<TestEntity> testEntities1 = testEntityService
-                .getPageByFilters(List.of(), PageRequest.of(0, 10, Sort.by("id").ascending()));
+                .getPageByFilters(List.of(), PageRequest.of(0, 10, Sort.by(id).ascending()));
         assertEquals(3, testEntities1.getTotalElements());
 
         Page<TestEntity> testEntities2 = testEntityService
@@ -125,25 +126,25 @@ public class TestEntitySelectServiceTest {
     @Test
     public void findAll_fields_param_ByFilters_ByPredicate() {
         FilterGroup filterGroup = new FilterGroup(List.of(
-                new FilterGroup.Filter("name", FilterType.EQUALS, "name1"),
-                new FilterGroup.Filter("name", FilterType.EQUALS, "name2")
+                new FilterGroup.Filter(name, FilterType.EQUALS, "name1"),
+                new FilterGroup.Filter(name, FilterType.EQUALS, "name2")
         ), CombineType.OR);
         List<FilterGroup> filterGroups = List.of(filterGroup);
-        List<Map<String, Object>> list1 = testEntityService.findAllByFilters(List.of("name"), filterGroups);
+        List<Map<String, Object>> list1 = testEntityService.findAllByFilters(List.of(name), filterGroups);
         assertEquals(2, list1.size());
 
-        List<Map<String, Object>> list2 = testEntityService.findAllByPredicate(List.of("name"), List.of());
+        List<Map<String, Object>> list2 = testEntityService.findAllByPredicate(List.of(name), List.of());
         assertEquals(3, list2.size());
     }
 
     @Test
     public void getPage_fields_param_ByFilters_ByPredicate() {
         Page<Map<String, Object>> testEntities1 = testEntityService
-                .getPageByFilters(List.of("name"), List.of(), PageRequest.of(0, 10, Sort.by("id").ascending()));
+                .getPageByFilters(List.of(name), List.of(), PageRequest.of(0, 10, Sort.by(id).ascending()));
         assertEquals(3, testEntities1.getTotalElements());
 
         Page<Map<String, Object>> testEntities2 = testEntityService
-                .getPageByPredicate(List.of("name"), List.of(), PageRequest.of(0, 10));
+                .getPageByPredicate(List.of(name), List.of(), PageRequest.of(0, 10));
         assertEquals(3, testEntities2.getTotalElements());
     }
 }

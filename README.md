@@ -270,11 +270,12 @@ List<?> values = commonFieldService.findDistinctFieldValuesByFilterGroups(
 ## Other
 Default properties
 ```yaml
-querydsl-utils:
-  patterns:
-    time-pattern: HH:mm:ss
-    date-pattern: yyyy-MM-dd
-    date-time-pattern: yyyy-MM-dd HH:mm:ss
+spring:
+  mvc:
+    format:
+      time: HH:mm:ss
+      date: dd/MM/yyyy
+      date-time: dd/MM/yyyy HH:mm:ss
 ```
 ---
 

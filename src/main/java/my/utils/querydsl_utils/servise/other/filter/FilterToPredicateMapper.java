@@ -30,10 +30,10 @@ public class FilterToPredicateMapper {
 
     @PostConstruct
     public void init() {
-        AppProperties.Patterns patterns = appProperties.getPatterns();
-        DATE_FORMATTER = DateTimeFormatter.ofPattern(patterns.getDatePattern());
-        TIME_FORMATTER = DateTimeFormatter.ofPattern(patterns.getTimePattern());
-        DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(patterns.getDateTimePattern());
+        AppProperties.Format format = appProperties.getFormat();
+        TIME_FORMATTER = DateTimeFormatter.ofPattern(format.getTime());
+        DATE_FORMATTER = DateTimeFormatter.ofPattern(format.getDate());
+        DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(format.getDateTime());
     }
 
     public List<Predicate> getPredicates(Map<String, FieldInfo> fieldMap,

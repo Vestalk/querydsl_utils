@@ -6,15 +6,15 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "querydsl-utils")
+@ConfigurationProperties(prefix = "spring.mvc")
 public class AppProperties {
 
-    private Patterns patterns = new Patterns();
+    private Format format = new Format();
 
     @Data
-    public static class Patterns {
-        private String timePattern = "HH:mm:ss";
-        private String datePattern = "yyyy-MM-dd";
-        private String dateTimePattern = "yyyy-MM-dd HH:mm:ss";
+    public static class Format {
+        private String time = "HH:mm:ss";
+        private String date = "dd/MM/yyyy";
+        private String dateTime = "dd/MM/yyyy HH:mm:ss";
     }
 }
