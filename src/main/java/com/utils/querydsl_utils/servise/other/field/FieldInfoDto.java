@@ -1,0 +1,14 @@
+package com.utils.querydsl_utils.servise.other.field;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+@AllArgsConstructor
+public class FieldInfoDto {
+    private String name;
+    private String label;
+    private FieldType type;
+}

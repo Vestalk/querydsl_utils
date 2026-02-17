@@ -64,8 +64,8 @@ SELECT e FROM Entity e
 * pagination without joins
 
 ### Example
-- [TestEntitySelectService](src/test/java/my/utils/querydsl_utils/example/servise/TestEntitySelectService.java)
-- [TestEntitySelectServiceTest](src/test/java/my/utils/querydsl_utils/example/servise/TestEntitySelectServiceTest.java)
+- [TestEntitySelectService](src/test/java/com/utils/querydsl_utils/example/servise/TestEntitySelectService.java)
+- [TestEntitySelectServiceTest](src/test/java/com/utils/querydsl_utils/example/servise/TestEntitySelectServiceTest.java)
 
 
 **Capabilities:**
@@ -109,8 +109,8 @@ This method is applied consistently to:
 * `distinct` queries
 
 ### Example
-- [TestEntityProjectionSelectService](src/test/java/my/utils/querydsl_utils/example/servise/TestEntityProjectionSelectService.java)
-- [TestEntityProjectionSelectServiceTest](src/test/java/my/utils/querydsl_utils/example/servise/TestEntityProjectionSelectServiceTest.java)
+- [TestEntityProjectionSelectService](src/test/java/com/utils/querydsl_utils/example/servise/TestEntityProjectionSelectService.java)
+- [TestEntityProjectionSelectServiceTest](src/test/java/com/utils/querydsl_utils/example/servise/TestEntityProjectionSelectServiceTest.java)
 
 **Capabilities:**
 
@@ -162,8 +162,8 @@ Duplicate `masterType` values will cause application startup to fail:
 IllegalStateException: Duplicate Master Type: test-entity (ServiceA ServiceB)
 ```
 
-- [CommonFieldService](src/main/java/my/utils/querydsl_utils/servise/CommonFieldService.java)
-- [CommonFieldServiceTest](src/test/java/my/utils/querydsl_utils/example/servise/CommonFieldServiceTest.java)
+- [CommonFieldService](src/main/java/com/utils/querydsl_utils/servise/CommonFieldService.java)
+- [CommonFieldServiceTest](src/test/java/com/utils/querydsl_utils/example/servise/CommonFieldServiceTest.java)
 
 Typical use cases:
 
@@ -296,7 +296,7 @@ spring:
         <relativePath/>
     </parent>
 
-    <groupId>my.utils</groupId>
+    <groupId>com.utils</groupId>
     <artifactId>table-api-core</artifactId>
     <version>0.0.1</version>
     <name>table-api-core</name>
@@ -333,7 +333,7 @@ spring:
             <classifier>jakarta</classifier>
         </dependency>
         <dependency>
-            <groupId>my.utils</groupId>
+            <groupId>com.utils</groupId>
             <artifactId>querydsl-utils</artifactId>
             <version>1.0.0</version>
         </dependency>

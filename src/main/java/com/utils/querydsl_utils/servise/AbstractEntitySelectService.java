@@ -1,0 +1,92 @@
+package com.utils.querydsl_utils.servise;
+
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.EntityPathBase;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.utils.querydsl_utils.servise.other.field.FieldInfo;
+import com.utils.querydsl_utils.servise.other.filter.FilterGroup;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.Map;
+
+public abstract class AbstractEntitySelectService<T> extends AbstractSelectService {
+
+    private final EntityPathBase<T> entityPathBase;
+    private final JPAQueryFactory jpaQueryFactory;
+
+    protected AbstractEntitySelectService(Map<String, FieldInfo> fieldInfos,
+                                          EntityPathBase<T> entityPathBase, JPAQueryFactory jpaQueryFactory) {
+
+        super(fieldInfos);
+        this.entityPathBase = entityPathBase;
+        this.jpaQueryFactory = jpaQueryFactory;
+    }
+
+    @Override
+    public List<?> findDistinctFieldValuesByPredicates(String field, List<Predicate> predicates) {
+        return jpaQueryFactory
+                .select(getSelectExpressions(field))
+                .where(predicates.toArray(Predicate[]::new))
+                .distinct()
+                .from(entityPathBase)
+                .fetch();
+    }
+
+    public List<T> findAllByFilters(List<FilterGroup> filterGroups) {
+        return findAllByPredicate(filterToPredicateMapper.getPredicates(getFieldMap(), filterGroups));
+    }
+
+    public List<T> findAllByPredicate(List<Predicate> predicates) {
+        return jpaQueryFactory.select(entityPathBase)
+                .from(entityPathBase)
+                .where(predicates.toArray(Predicate[]::new))
+                .fetch();
+    }
+
+    public Page<T> getPageByFilters(List<FilterGroup> filterGroups, Pageable pageable) {
+        return getPageByPredicate(filterToPredicateMapper.getPredicates(getFieldMap(), filterGroups), pageable);
+    }
+
+    public Page<T> getPageByPredicate(List<Predicate> predicates, Pageable pageable) {
+        JPAQuery<T> query = jpaQueryFactory.select(entityPathBase)
+                .from(entityPathBase).where(predicates.toArray(Predicate[]::new));
+
+        return getPageByPredicate(entityPathBase, query, pageable);
+    }
+
+    public List<Map<String, Object>> findAllByFilters(List<String> fields, List<FilterGroup> filterGroups) {
+        return findAllByPredicate(fields, filterToPredicateMapper.getPredicates(getFieldMap(), filterGroups));
+    }
+
+    public List<Map<String, Object>> findAllByPredicate(List<String> fields, List<Predicate> predicates) {
+        List<Tuple> tuples = jpaQueryFactory
+                .select(buildSelectExpressions(fields).toArray(Expression[]::new))
+                .from(entityPathBase)
+                .where(predicates.toArray(Predicate[]::new))
+                .fetch();
+
+        return mapTupleToList(fields, tuples);
+    }
+
+    public Page<Map<String, Object>> getPageByFilters(List<String> fields, List<FilterGroup> filterGroups,
+                                                      Pageable pageable) {
+
+        return getPageByPredicate(fields, filterToPredicateMapper.getPredicates(getFieldMap(), filterGroups), pageable);
+    }
+
+    public Page<Map<String, Object>> getPageByPredicate(List<String> fields, List<Predicate> predicates,
+                                                        Pageable pageable) {
+
+        JPAQuery<Tuple> query = jpaQueryFactory
+                .select(buildSelectExpressions(fields).toArray(Expression[]::new))
+                .from(entityPathBase)
+                .where(predicates.toArray(Predicate[]::new));
+
+        return getPageByPredicate(entityPathBase, query, fields, pageable);
+    }
+}
