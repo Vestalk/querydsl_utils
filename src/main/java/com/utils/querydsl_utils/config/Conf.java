@@ -1,11 +1,11 @@
 package com.utils.querydsl_utils.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import com.utils.querydsl_utils.servise.AbstractEntitySelectService;
 import com.utils.querydsl_utils.servise.AbstractProjectionSelectService;
 import com.utils.querydsl_utils.servise.AbstractSelectService;
 import com.utils.querydsl_utils.servise.CommonService;
+import jakarta.persistence.EntityManager;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

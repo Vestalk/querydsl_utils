@@ -1,10 +1,10 @@
 package com.utils.querydsl_utils.servise;
 
-import lombok.RequiredArgsConstructor;
 import com.utils.querydsl_utils.servise.other.field.FieldInfo;
 import com.utils.querydsl_utils.servise.other.field.FieldInfoDto;
 import com.utils.querydsl_utils.servise.other.field.FieldType;
 import com.utils.querydsl_utils.servise.other.filter.FilterGroup;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
